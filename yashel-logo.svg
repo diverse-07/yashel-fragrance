@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 240" width="100%" height="100%" aria-label="Yashel Fragrance Logo">
+  <defs>
+    <!-- Royal Metallic Gold Gradients -->
+    <linearGradient id="yashelGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f5e1a4"/>
+      <stop offset="25%" stop-color="#d4af37"/>
+      <stop offset="50%" stop-color="#fdf3cd"/>
+      <stop offset="75%" stop-color="#b8860b"/>
+      <stop offset="100%" stop-color="#8c6507"/>
+    </linearGradient>
+
+    <linearGradient id="dropGold" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#fff4d0"/>
+      <stop offset="35%" stop-color="#e5c158"/>
+      <stop offset="70%" stop-color="#b8860b"/>
+      <stop offset="100%" stop-color="#735205"/>
+    </linearGradient>
+
+    <radialGradient id="dropHighlight" cx="35%" cy="30%" r="40%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#f9e8a2" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#b8860b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ================= TOP SECTION: PERFUME DROPLET & ORNAMENT ================= -->
+  <!-- Central Perfume Oil Teardrop -->
+  <g transform="translate(250, 24)">
+    <!-- Droplet Base -->
+    <path d="M0, -18 C6, -10 14, 0 14, 11 C14, 19 8, 25 0, 25 C-8, 25 -14, 19 -14, 11 C-14, 0 -6, -10 0, -18 Z" 
+          fill="url(#dropGold)" filter="drop-shadow(0px 2px 4px rgba(140, 101, 7, 0.25))"/>
+    <!-- Droplet Inner Glow / Highlight -->
+    <path d="M-2, -10 C1, -5 6, 2 6, 9 C6, 14 3, 18 -1, 19 C1, 18 3, 14 3, 9 C3, 4 0, -2 -2, -10 Z" 
+          fill="url(#dropHighlight)"/>
+    <!-- Small droplet jewel beads underneath -->
+    <circle cx="0" cy="33" r="2.2" fill="url(#yashelGold)"/>
+    <circle cx="0" cy="40" r="1.6" fill="url(#yashelGold)"/>
+  </g>
+
+  <!-- Top Crown Flourishes / Botanical Leaves (Left & Right Symmetric) -->
+  <!-- Left Flourish -->
+  <g transform="translate(250, 42)">
+    <!-- Central leaf wings -->
+    <path d="M-8,-10 C-22,-22 -44,-24 -68,-14 C-52,-6 -36,-3 -18,-5 C-28,-1 -42,3 -54,12 C-38,10 -24,5 -10,1 Z" fill="url(#yashelGold)"/>
+    <path d="M-18,-8 C-36,-26 -65,-30 -96,-16 C-76,-8 -54,-6 -28,-3 Z" fill="url(#yashelGold)" opacity="0.9"/>
+    <!-- Curled acanthus scrolls -->
+    <path d="M-30,4 C-50,14 -72,20 -98,16 C-80,10 -62,3 -38,-1 Z" fill="url(#yashelGold)" opacity="0.85"/>
+    <path d="M-60,-2 C-85,-6 -112,4 -130,22 C-112,14 -92,8 -66,7 Z" fill="url(#yashelGold)" opacity="0.75"/>
+    <circle cx="-38" cy="-14" r="1.8" fill="url(#yashelGold)"/>
+    <circle cx="-68" cy="-18" r="1.5" fill="url(#yashelGold)"/>
+    <circle cx="-95" cy="-8" r="1.2" fill="url(#yashelGold)"/>
+
+    <!-- Right Flourish (Mirrored) -->
+    <path d="M8,-10 C22,-22 44,-24 68,-14 C52,-6 36,-3 18,-5 C28,-1 42,3 54,12 C38,10 24,5 10,1 Z" fill="url(#yashelGold)"/>
+    <path d="M18,-8 C36,-26 65,-30 96,-16 C76,-8 54,-6 28,-3 Z" fill="url(#yashelGold)" opacity="0.9"/>
+    <!-- Curled acanthus scrolls -->
+    <path d="M30,4 C50,14 72,20 98,16 C80,10 62,3 38,-1 Z" fill="url(#yashelGold)" opacity="0.85"/>
+    <path d="M60,-2 C85,-6 112,4 130,22 C112,14 92,8 66,7 Z" fill="url(#yashelGold)" opacity="0.75"/>
+    <circle cx="38" cy="-14" r="1.8" fill="url(#yashelGold)"/>
+    <circle cx="68" cy="-18" r="1.5" fill="url(#yashelGold)"/>
+    <circle cx="95" cy="-8" r="1.2" fill="url(#yashelGold)"/>
+  </g>
+
+  <!-- ================= CENTER SECTION: YASHEL BRAND TYPOGRAPHY ================= -->
+  <!-- "YASHEL" In Imperial Roman Serif -->
+  <text x="250" y="132" 
+        text-anchor="middle" 
+        font-family="'Cinzel', 'Cormorant Garamond', 'Philosopher', 'Times New Roman', serif" 
+        font-size="62" 
+        font-weight="600" 
+        letter-spacing="18" 
+        fill="url(#yashelGold)">
+    YASHEL
+  </text>
+
+  <!-- Hairline Dividers with side ornaments -->
+  <g transform="translate(250, 154)">
+    <!-- Left Divider Line -->
+    <line x1="-140" y1="0" x2="-65" y2="0" stroke="url(#yashelGold)" stroke-width="0.9" opacity="0.85"/>
+    <circle cx="-65" cy="0" r="1.5" fill="url(#yashelGold)"/>
+    
+    <!-- Right Divider Line -->
+    <line x1="65" y1="0" x2="140" y2="0" stroke="url(#yashelGold)" stroke-width="0.9" opacity="0.85"/>
+    <circle cx="65" cy="0" r="1.5" fill="url(#yashelGold)"/>
+
+    <!-- "FRAGRANCE" Subtitle -->
+    <text x="0" y="3.5" 
+          text-anchor="middle" 
+          font-family="'Montserrat', 'Cinzel', sans-serif" 
+          font-size="12.5" 
+          font-weight="500" 
+          letter-spacing="11" 
+          fill="url(#yashelGold)">
+      FRAGRANCE
+    </text>
+  </g>
+
+  <!-- ================= BOTTOM SECTION: ROYAL SCROLL FLOURISHES ================= -->
+  <g transform="translate(250, 185)">
+    <!-- Center delicate flourish -->
+    <path d="M0,12 C-14,12 -26,6 -35,0 C-22,2 -12,4 0,4 C12,4 22,2 35,0 C26,6 14,12 0,12 Z" fill="url(#yashelGold)"/>
+    <!-- Left lower scroll -->
+    <path d="M-35,0 C-55,-6 -80,-8 -110,4 C-90,0 -70,2 -50,6 C-65,10 -80,18 -92,28 C-78,18 -62,12 -42,10 Z" fill="url(#yashelGold)" opacity="0.8"/>
+    <!-- Right lower scroll -->
+    <path d="M35,0 C55,-6 80,-8 110,4 C90,0 70,2 50,6 C65,10 80,18 92,28 C78,18 62,12 42,10 Z" fill="url(#yashelGold)" opacity="0.8"/>
+    <!-- Central bottom finial jewel -->
+    <circle cx="0" cy="18" r="2.2" fill="url(#yashelGold)"/>
+  </g>
+</svg>
