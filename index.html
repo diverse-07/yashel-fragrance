@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full scroll-smooth bg-[#080b0f] text-[#e2e8f0] antialiased">
+<html lang="en" class="h-full scroll-smooth bg-[#06090d] text-[#e2e8f0] antialiased">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
   <title>YASHEL — Haute Parfumerie & Pure Royal Attars | Greater Noida</title>
   <meta name="description" content="Discover Yashel Fragrance, Greater Noida's premier luxury perfume maison. Artisanal 100ml Eau De Parfum, 100% pure non-alcoholic attars, and bespoke gift hampers." />
   
@@ -32,8 +32,8 @@
           },
           colors: {
             midnight: {
-              950: '#06090d',
-              900: '#090d13',
+              950: '#04070a',
+              900: '#080c12',
               850: '#0d131a',
               800: '#121a24',
               700: '#1b2533',
@@ -56,7 +56,7 @@
           keyframes: {
             float: {
               '0%, 100%': { transform: 'translate3d(0, 0px, 0) rotate(0deg)' },
-              '50%': { transform: 'translate3d(0, -12px, 0) rotate(0.8deg)' },
+              '50%': { transform: 'translate3d(0, -10px, 0) rotate(0.8deg)' },
             },
             pulseGlow: {
               '0%': { opacity: '0.25', transform: 'scale(0.98)' },
@@ -77,23 +77,31 @@
       -webkit-user-select: none;
     }
 
-    /* Ambient Cursor Light */
-    #cursor-light {
-      pointer-events: none;
-      position: fixed;
-      width: 480px;
-      height: 480px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, rgba(184, 134, 11, 0.03) 40%, rgba(0, 0, 0, 0) 70%);
-      transform: translate(-50%, -50%);
-      transition: width 0.3s ease, height 0.3s ease;
-      z-index: 40;
+    /* Ambient Cursor Light (Desktop only) */
+    @media (pointer: fine) {
+      #cursor-light {
+        pointer-events: none;
+        position: fixed;
+        width: 440px;
+        height: 440px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, rgba(184, 134, 11, 0.03) 40%, rgba(0, 0, 0, 0) 70%);
+        transform: translate(-50%, -50%);
+        transition: width 0.3s ease, height 0.3s ease;
+        z-index: 40;
+      }
+    }
+    @media (pointer: coarse) {
+      #cursor-light {
+        display: none;
+      }
     }
 
-    /* 3D Bottle Tilt */
+    /* 3D Bottle Tilt with smooth pan-y scrolling for Android */
     .preserve-3d {
       transform-style: preserve-3d;
       will-change: transform;
+      touch-action: pan-y;
     }
 
     /* Sound Wave Visualizer */
@@ -110,16 +118,25 @@
       100% { height: 16px; }
     }
 
-    /* Smooth custom scrollbars */
+    /* Hide scrollbars for clean horizontal swipe chips on mobile */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Smooth desktop scrollbar */
     ::-webkit-scrollbar {
-      width: 8px;
+      width: 6px;
     }
     ::-webkit-scrollbar-track {
       background: #090d13;
     }
     ::-webkit-scrollbar-thumb {
       background: #b8860b;
-      border-radius: 4px;
+      border-radius: 3px;
     }
 
     /* Video reel slide transitions */
@@ -149,16 +166,16 @@
   <div id="cursor-light"></div>
 
   <!-- ================= TOP QUIET-LUXURY ANNOUNCEMENT RIBBON ================= -->
-  <aside class="bg-[#090d13] border-b border-white/[0.06] text-[#c7bfb3] text-[11px] tracking-[0.22em] uppercase py-2 px-4 relative z-30">
+  <aside class="bg-[#080c12] border-b border-white/[0.06] text-[#c7bfb3] text-[10px] sm:text-[11px] tracking-normal sm:tracking-[0.2em] uppercase py-2 px-3 sm:px-4 relative z-30">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="hidden md:flex items-center space-x-2 text-[#d4af37]">
         <i class="ri-map-pin-2-line text-xs"></i>
         <span>Atelier: Greater Noida, India</span>
       </div>
-      <div class="mx-auto md:mx-0 text-center font-medium text-white flex items-center justify-center gap-2">
-        <span class="w-1.5 h-1.5 rounded-full bg-[#d4af37]"></span>
-        <span>Complimentary Express Shipping Across India on Orders Above ₹999</span>
-        <span class="w-1.5 h-1.5 rounded-full bg-[#d4af37]"></span>
+      <div class="mx-auto md:mx-0 text-center font-medium text-white flex items-center justify-center gap-1.5 sm:gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#d4af37] shrink-0"></span>
+        <span class="truncate">Free Express Shipping Across India on ₹999+</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-[#d4af37] shrink-0"></span>
       </div>
       <div class="hidden md:flex items-center space-x-4">
         <a href="tel:+919560291377" class="hover:text-[#d4af37] transition-colors flex items-center gap-1.5">
@@ -172,12 +189,41 @@
     </div>
   </aside>
 
+  <!-- ================= MOBILE SLIDE-OVER DRAWER ================= -->
+  <div id="mobile-drawer" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden transition-opacity duration-300">
+    <div class="fixed inset-y-0 left-0 max-w-[300px] w-full bg-[#090d13] border-r border-white/10 p-6 flex flex-col justify-between shadow-2xl">
+      <div>
+        <div class="flex items-center justify-between pb-6 border-b border-white/10">
+          <img src="yashel-logo.svg" alt="Yashel" class="h-10 w-auto object-contain" />
+          <button id="close-drawer-btn" class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-white/10" aria-label="Close menu">
+            <i class="ri-close-line text-xl"></i>
+          </button>
+        </div>
+        <nav class="mt-8 space-y-5 text-xs uppercase tracking-[0.2em] font-medium text-slate-300">
+          <a href="#home" class="block text-[#d4af37] hover:text-white py-1">01 · Home</a>
+          <a href="#hallmarks" class="block hover:text-[#d4af37] py-1">02 · Maison Heritage</a>
+          <a href="#campaign" class="block hover:text-[#d4af37] py-1">03 · Campaign Films</a>
+          <a href="#catalog" class="block hover:text-[#d4af37] py-1">04 · Fragrance Catalog</a>
+          <a href="#story" class="block hover:text-[#d4af37] py-1">05 · Greater Noida Studio</a>
+          <a href="#contact" class="block hover:text-[#d4af37] py-1">06 · Concierge & Orders</a>
+        </nav>
+      </div>
+      <div class="pt-6 border-t border-white/10 space-y-3">
+        <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+perfumes" target="_blank" class="w-full py-3 bg-[#25D366] text-white text-xs font-semibold uppercase tracking-wider rounded-lg flex items-center justify-center gap-2">
+          <i class="ri-whatsapp-line text-base"></i> Order on WhatsApp
+        </a>
+        <a href="tel:+919560291377" class="w-full py-2.5 border border-white/20 text-white text-xs font-medium uppercase tracking-wider rounded-lg flex items-center justify-center gap-2">
+          <i class="ri-phone-line text-sm text-[#d4af37]"></i> Call +91 95602 91377
+        </a>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= HERO SHOWCASE SECTION (AZZARO STAGE FIXED TO YASHEL) ================= -->
-  <!-- Takes the grand editorial stage presentation and fixes all branding to Yashel -->
-  <section class="relative w-full min-h-[90vh] lg:min-h-[96vh] flex items-center justify-center p-3 sm:p-6 lg:p-8 overflow-hidden" id="home">
+  <!-- Responsive height adapted cleanly for Android and desktop -->
+  <section class="relative w-full min-h-[580px] sm:min-h-[720px] lg:min-h-[820px] flex items-center justify-center p-2 sm:p-5 lg:p-8 overflow-hidden" id="home">
     
-    <!-- Outer window shell representing the high-end presentation mockup in reference image -->
-    <main class="relative w-full h-full max-w-[1540px] min-h-[820px] rounded-2xl md:rounded-[28px] overflow-hidden bg-gradient-to-b from-[#0e1620] via-[#090d13] to-[#05080c] shadow-[0_25px_80px_rgba(0,0,0,0.85)] border border-slate-800/40 flex flex-col justify-between" data-purpose="editorial-stage">
+    <main class="relative w-full h-full max-w-[1540px] min-h-[560px] sm:min-h-[680px] lg:min-h-[780px] rounded-xl sm:rounded-2xl md:rounded-[28px] overflow-hidden bg-gradient-to-b from-[#0e1620] via-[#090d13] to-[#05080c] shadow-[0_25px_80px_rgba(0,0,0,0.85)] border border-slate-800/40 flex flex-col justify-between" data-purpose="editorial-stage">
       
       <!-- Atmospheric WebGL Fluid Lighting Shader (Warm Amber & Royal Caustics) -->
       <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -254,11 +300,10 @@ void main() {
     float mouseDist = length(p - mPos * 0.3);
     float glow = smoothstep(0.8, 0.0, mouseDist) * 0.3;
     
-    // Royal Palette: Deep Midnight Espresso, Rich Amber & Polished 24k Gold Caustics
     vec3 bgBase = vec3(0.045, 0.055, 0.075);
     vec3 deepShadow = vec3(0.02, 0.025, 0.035);
-    vec3 warmAmber = vec3(0.48, 0.36, 0.15); // Imperial Gold Refraction
-    vec3 royalGlow = vec3(0.35, 0.25, 0.08); // Warm Caustic Sillage
+    vec3 warmAmber = vec3(0.48, 0.36, 0.15);
+    vec3 royalGlow = vec3(0.35, 0.25, 0.08);
     
     float caustic = pow(max(0.0, snoise(p * 4.2 + n2 * 0.7 + t * 0.18)), 2.4);
     float centerVignette = smoothstep(1.2, 0.1, length(p));
@@ -318,15 +363,19 @@ void main() {
           })();
           </script>
         </div>
-        <!-- Center Depth Spotlight -->
-        <div class="absolute inset-0 bg-radial-vignette mix-blend-overlay"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[550px] bg-amber-500/10 rounded-full blur-[120px] animate-pulse-subtle pointer-events-none"></div>
       </div>
 
-      <!-- STAGE HEADER: Yashel Navigation with Official Logo -->
-      <header class="relative z-30 w-full pt-8 pb-6 px-6 sm:px-10 md:px-14 flex items-center justify-between border-b border-white/[0.06]">
-        <!-- Navigation Links -->
-        <nav aria-label="Primary Navigation" class="hidden md:flex items-center space-x-7 text-[11px] uppercase tracking-[0.28em] font-light text-slate-300">
+      <!-- STAGE HEADER: Clean Mobile & Desktop Layout -->
+      <header class="relative z-30 w-full pt-4 sm:pt-6 pb-4 px-4 sm:px-8 md:px-12 flex items-center justify-between border-b border-white/[0.06]">
+        
+        <!-- Mobile Drawer Hamburger Toggle Button -->
+        <button id="open-drawer-btn" class="md:hidden p-2 -ml-2 text-white hover:text-[#d4af37] transition-colors" aria-label="Open navigation menu">
+          <i class="ri-menu-2-line text-2xl"></i>
+        </button>
+
+        <!-- Desktop Navigation Links -->
+        <nav aria-label="Primary Navigation" class="hidden md:flex items-center space-x-6 lg:space-x-8 text-[11px] uppercase tracking-[0.25em] font-light text-slate-300">
           <a class="text-[#d4af37] transition-colors duration-300 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-[#d4af37]" href="#home">Home</a>
           <a class="hover:text-white transition-colors duration-300 relative py-1" href="#hallmarks">Heritage</a>
           <a class="hover:text-white transition-colors duration-300 relative py-1" href="#campaign">Campaign</a>
@@ -334,43 +383,45 @@ void main() {
           <a class="hover:text-white transition-colors duration-300 relative py-1" href="#story">Atelier</a>
         </nav>
 
-        <!-- Brand Official Logo / Crest Wordmark (High-Res Vector with Background Removed) -->
-        <div class="absolute left-1/2 -translate-x-1/2 text-center pointer-events-auto">
+        <!-- Official Yashel Royal Logo (Centered & Scaled for Mobile/Desktop) -->
+        <div class="flex items-center justify-center">
           <a class="inline-flex flex-col items-center group focus:outline-none" href="#home" title="Yashel Fragrance">
-            <img src="yashel-logo.svg" alt="Yashel Fragrance Royal Logo" class="h-16 sm:h-20 w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]" />
+            <img src="yashel-logo.svg" alt="Yashel Fragrance Royal Logo" class="h-12 sm:h-16 lg:h-20 w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]" />
           </a>
         </div>
 
         <!-- Right Header Actions (Directory Search & Direct WhatsApp Order) -->
-        <div class="flex items-center space-x-4 sm:space-x-6 text-slate-300">
+        <div class="flex items-center space-x-2 sm:space-x-4 text-slate-300">
           <a href="#catalog" class="hidden sm:inline-flex items-center text-[10px] tracking-[0.2em] font-medium text-slate-400 hover:text-white uppercase transition-colors">
             <i class="ri-search-line text-sm mr-1.5 text-[#d4af37]"></i> Search
           </a>
-          <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+perfumes" target="_blank" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#b8860b] to-[#d4af37] text-black text-[10px] tracking-[0.2em] uppercase font-bold hover:brightness-110 transition-all rounded-full shadow-lg">
-            <i class="ri-whatsapp-line text-sm mr-1.5"></i> Order Direct
+          <!-- Compact Order CTA for Mobile -->
+          <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+perfumes" target="_blank" class="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#b8860b] to-[#d4af37] text-black text-[10px] sm:text-[11px] tracking-[0.16em] uppercase font-bold hover:brightness-110 transition-all rounded-full shadow-lg">
+            <i class="ri-whatsapp-line text-xs sm:text-sm mr-1"></i>
+            <span class="hidden xs:inline">Order</span>
           </a>
         </div>
       </header>
 
       <!-- STAGE HERO CENTERPIECE: Monumental YASHEL Watermark + 3D Tilt Flacon Bottle -->
-      <section aria-label="Hero Showcase" class="relative z-20 w-full flex-1 flex items-center justify-center pointer-events-none px-4 py-8">
+      <section aria-label="Hero Showcase" class="relative z-20 w-full flex-1 flex items-center justify-center pointer-events-none px-3 py-4 sm:py-6">
         
         <!-- Monumental Editorial Typography in Background: YASHEL -->
         <div aria-hidden="true" class="absolute inset-0 flex items-center justify-center select-none overflow-hidden">
-          <h1 class="font-watermark text-[17vw] leading-none tracking-[0.16em] uppercase font-light text-transparent bg-clip-text bg-gradient-to-b from-[#f5e1a4]/30 via-slate-600/15 to-transparent scale-y-110 drop-shadow-2xl">
+          <h1 class="font-watermark text-[20vw] sm:text-[17vw] leading-none tracking-[0.16em] uppercase font-light text-transparent bg-clip-text bg-gradient-to-b from-[#f5e1a4]/25 via-slate-600/10 to-transparent scale-y-110 drop-shadow-2xl">
             YASHEL
           </h1>
         </div>
 
         <!-- Center Floating 3D Interactive Perfume Bottle (Isolated Transparent Flacon) -->
         <div class="relative z-20 preserve-3d pointer-events-auto cursor-pointer transition-transform duration-200 ease-out" id="bottle-tilt-container">
-          <div class="relative animate-float-slow filter drop-shadow-[0_30px_50px_rgba(0,0,0,0.9)] group flex items-center justify-center">
+          <div class="relative animate-float-slow filter drop-shadow-[0_25px_45px_rgba(0,0,0,0.95)] group flex items-center justify-center">
             <!-- Soft ambient bottle backlight glow -->
-            <div class="absolute -inset-8 bg-amber-500/15 rounded-full blur-3xl opacity-60 group-hover:opacity-90 transition-opacity duration-700 pointer-events-none"></div>
+            <div class="absolute -inset-6 sm:-inset-8 bg-amber-500/15 rounded-full blur-2xl sm:blur-3xl opacity-60 group-hover:opacity-90 transition-opacity duration-700 pointer-events-none"></div>
             
             <!-- Real Isolated Crystal Flacon Bottle (100% Background Removed) -->
             <img alt="Yashel Haute Parfumerie Crystal Flacon - Greater Noida" 
-                 class="w-64 sm:w-72 md:w-80 lg:w-[360px] max-h-[460px] object-contain select-none pointer-events-none relative z-10 transition-transform duration-500 group-hover:scale-105" 
+                 class="w-48 sm:w-64 md:w-80 lg:w-[360px] max-h-[290px] sm:max-h-[380px] lg:max-h-[460px] object-contain select-none pointer-events-none relative z-10 transition-transform duration-500 group-hover:scale-105" 
                  draggable="false" 
                  id="perfume-bottle" 
                  src="assets/yashel-crystal-flacon.png" />
@@ -380,8 +431,8 @@ void main() {
           </div>
         </div>
 
-        <!-- Scent Accords Floating Minimal Pills (Editorial Touch) -->
-        <div class="absolute bottom-6 hidden md:flex items-center space-x-3 text-[10px] uppercase tracking-[0.25em] text-slate-400/90 pointer-events-auto">
+        <!-- Scent Accords Floating Minimal Pills (Desktop Touch) -->
+        <div class="absolute bottom-4 hidden lg:flex items-center space-x-3 text-[10px] uppercase tracking-[0.25em] text-slate-400/90 pointer-events-auto">
           <span class="px-3.5 py-1.5 rounded-full border border-white/10 bg-slate-900/60 backdrop-blur-md hover:border-[#d4af37] hover:text-[#d4af37] transition-all cursor-default">
             Top · Bergamot & Sea Mist
           </span>
@@ -396,58 +447,36 @@ void main() {
         </div>
       </section>
 
-      <!-- STAGE FOOTER: Concept Description + Scroll Prompt + Ambience Toggle -->
-      <footer class="relative z-30 w-full px-6 sm:px-10 md:px-14 pb-8 pt-4 flex flex-col md:flex-row items-center md:items-end justify-between gap-6 pointer-events-auto border-t border-white/[0.04]">
+      <!-- STAGE FOOTER: Responsive Layout for Mobile and Desktop -->
+      <footer class="relative z-30 w-full px-4 sm:px-8 md:px-12 pb-4 sm:pb-6 pt-3 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-6 pointer-events-auto border-t border-white/[0.04]">
         
-        <!-- Bottom Left: Editorial Concept Description -->
-        <div class="max-w-xs sm:max-w-sm text-left">
-          <h2 class="text-xs sm:text-[13px] font-medium tracking-wide text-slate-200 leading-relaxed font-sans">
-            <strong class="font-semibold text-[#d4af37] tracking-wider">The Golden Legacy by Yashel</strong>
-            <span class="text-slate-400 font-light ml-1">· Artisanal luxury perfumery and pure non-alcoholic attars crafted in Greater Noida.</span>
+        <!-- Concept Description -->
+        <div class="text-center sm:text-left">
+          <h2 class="text-xs sm:text-[13px] font-medium tracking-wide text-slate-200 leading-tight font-sans">
+            <strong class="font-semibold text-[#d4af37] tracking-wider">The Golden Legacy</strong>
+            <span class="text-slate-400 font-light ml-1 hidden sm:inline">· Handcrafted extraits and pure non-alcoholic attars in Greater Noida.</span>
           </h2>
-          <div class="mt-3 flex items-center space-x-2">
-            <a class="group inline-flex items-center text-[10px] tracking-[0.25em] uppercase font-semibold text-[#d4af37] hover:text-[#f5e1a4] transition-colors" href="#catalog">
-              <span>Explore Collection</span>
-              <span class="inline-block ml-2 transform group-hover:translate-x-1.5 transition-transform duration-300">→</span>
-            </a>
-          </div>
         </div>
 
         <!-- Center: Scroll Down Indicator to Explore the Full Website -->
-        <div class="text-center">
-          <a href="#hallmarks" class="inline-flex flex-col items-center text-[10px] tracking-[0.25em] uppercase text-slate-400 hover:text-[#d4af37] transition-colors group">
-            <span class="mb-1.5">Scroll To Explore</span>
-            <i class="ri-arrow-down-line text-lg text-[#d4af37] animate-bounce-slow"></i>
+        <div class="text-center my-1 sm:my-0">
+          <a href="#hallmarks" class="inline-flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase text-slate-400 hover:text-[#d4af37] transition-colors group">
+            <span>Scroll To Explore</span>
+            <i class="ri-arrow-down-line text-sm text-[#d4af37] animate-bounce-slow"></i>
           </a>
         </div>
 
-        <!-- Bottom Right: Sound Ambience Control & Concierge Status -->
-        <div class="flex items-center space-x-5">
-          <!-- Sound Wave Visualizer / Ambience Trigger -->
-          <button aria-label="Toggle Sound Ambience" class="flex items-center space-x-1 px-3.5 py-2 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white/[0.08] transition-all group" id="sound-toggle">
-            <div class="flex items-end space-x-[2px] h-4 w-4">
+        <!-- Ambience Trigger & Atelier Attribution -->
+        <div class="flex items-center space-x-3">
+          <button aria-label="Toggle Sound Ambience" class="flex items-center space-x-1 px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white/[0.08] transition-all group" id="sound-toggle">
+            <div class="flex items-end space-x-[2px] h-3.5 w-3.5">
               <span class="bar w-[2px] bg-[#d4af37] rounded-full"></span>
               <span class="bar w-[2px] bg-[#f5e1a4] rounded-full"></span>
               <span class="bar w-[2px] bg-[#d4af37] rounded-full"></span>
               <span class="bar w-[2px] bg-[#8c6507] rounded-full"></span>
             </div>
-            <span class="text-[9px] uppercase tracking-[0.2em] text-slate-400 group-hover:text-slate-200 ml-1.5">Ambience</span>
+            <span class="text-[9px] uppercase tracking-[0.16em] text-slate-400 group-hover:text-slate-200 ml-1">Ambience</span>
           </button>
-
-          <!-- Greater Noida Atelier Attribution -->
-          <div class="flex items-center space-x-3 bg-white/[0.03] border border-white/10 px-4 py-2 rounded-xl backdrop-blur-md">
-            <div class="w-8 h-8 rounded-full bg-[#d4af37]/20 border border-[#d4af37]/40 flex items-center justify-center text-[#d4af37] font-serif font-bold text-sm">
-              Y
-            </div>
-            <div class="text-left">
-              <p class="text-[11px] font-medium text-slate-200 tracking-wide">
-                Greater Noida Atelier
-              </p>
-              <p class="text-[9px] tracking-wider text-[#d4af37] font-light leading-tight">
-                Ankit Goyal & Ishani Pandit
-              </p>
-            </div>
-          </div>
         </div>
 
       </footer>
@@ -456,52 +485,52 @@ void main() {
 
 
   <!-- ================= SECTION 2: MAISON HALLMARKS & HERITAGE SEAL ================= -->
-  <!-- Dignified architectural 4-column hallmarks bar -->
-  <section id="hallmarks" class="bg-[#faf8f5] text-[#1a1917] border-y border-[#e6dfd3] py-12 relative z-20">
+  <!-- 2x2 grid on mobile for compact, user-friendly scanning -->
+  <section id="hallmarks" class="bg-[#faf8f5] text-[#1a1917] border-y border-[#e6dfd3] py-8 sm:py-12 relative z-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-[#e6dfd3]">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
         
-        <div class="pt-6 sm:pt-0 sm:px-6 first:pl-0 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-full bg-white border border-[#e6dfd3] flex items-center justify-center shrink-0 text-[#b8860b] shadow-xs">
-            <i class="ri-drop-line text-xl"></i>
+        <div class="p-3 sm:p-0 flex items-start gap-2.5 sm:gap-4 bg-white sm:bg-transparent rounded-lg border sm:border-0 border-[#e6dfd3] p-3.5 shadow-xs sm:shadow-none">
+          <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-[#faf8f5] sm:bg-white border border-[#e6dfd3] flex items-center justify-center shrink-0 text-[#b8860b]">
+            <i class="ri-drop-line text-lg sm:text-xl"></i>
           </div>
           <div>
-            <span class="text-[10px] tracking-[0.25em] text-[#b8860b] font-semibold uppercase block mb-1">01 · Botanical Origin</span>
-            <h4 class="font-serif text-lg font-medium text-[#0f0e0d] tracking-wide">Pure Concentrates</h4>
-            <p class="text-xs text-[#70695e] font-light mt-1.5 leading-relaxed">Hydro-distilled floral & wood oils with zero synthetic alcohol fillers.</p>
+            <span class="text-[9px] sm:text-[10px] tracking-[0.2em] text-[#b8860b] font-semibold uppercase block mb-0.5">01 · Botanical</span>
+            <h4 class="font-serif text-sm sm:text-lg font-medium text-[#0f0e0d] tracking-wide">Pure Concentrates</h4>
+            <p class="text-[11px] sm:text-xs text-[#70695e] font-light mt-0.5 leading-snug">Zero synthetic alcohol in our pure attars.</p>
           </div>
         </div>
 
-        <div class="pt-6 sm:pt-0 sm:px-6 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-full bg-white border border-[#e6dfd3] flex items-center justify-center shrink-0 text-[#b8860b] shadow-xs">
-            <i class="ri-time-line text-xl"></i>
+        <div class="p-3 sm:p-0 flex items-start gap-2.5 sm:gap-4 bg-white sm:bg-transparent rounded-lg border sm:border-0 border-[#e6dfd3] p-3.5 shadow-xs sm:shadow-none">
+          <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-[#faf8f5] sm:bg-white border border-[#e6dfd3] flex items-center justify-center shrink-0 text-[#b8860b]">
+            <i class="ri-time-line text-lg sm:text-xl"></i>
           </div>
           <div>
-            <span class="text-[10px] tracking-[0.25em] text-[#b8860b] font-semibold uppercase block mb-1">02 · Endurance</span>
-            <h4 class="font-serif text-lg font-medium text-[#0f0e0d] tracking-wide">24-Hour Sillage</h4>
-            <p class="text-xs text-[#70695e] font-light mt-1.5 leading-relaxed">Master formulated with dense base resins for enduring tropical projection.</p>
+            <span class="text-[9px] sm:text-[10px] tracking-[0.2em] text-[#b8860b] font-semibold uppercase block mb-0.5">02 · Endurance</span>
+            <h4 class="font-serif text-sm sm:text-lg font-medium text-[#0f0e0d] tracking-wide">24-Hour Sillage</h4>
+            <p class="text-[11px] sm:text-xs text-[#70695e] font-light mt-0.5 leading-snug">Aged resin fixatives for tropical longevity.</p>
           </div>
         </div>
 
-        <div class="pt-6 sm:pt-0 sm:px-6 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-full bg-white border border-[#e6dfd3] flex items-center justify-center shrink-0 text-[#b8860b] shadow-xs">
-            <i class="ri-building-line text-xl"></i>
+        <div class="p-3 sm:p-0 flex items-start gap-2.5 sm:gap-4 bg-white sm:bg-transparent rounded-lg border sm:border-0 border-[#e6dfd3] p-3.5 shadow-xs sm:shadow-none">
+          <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-[#faf8f5] sm:bg-white border border-[#e6dfd3] flex items-center justify-center shrink-0 text-[#b8860b]">
+            <i class="ri-building-line text-lg sm:text-xl"></i>
           </div>
           <div>
-            <span class="text-[10px] tracking-[0.25em] text-[#b8860b] font-semibold uppercase block mb-1">03 · Flagship Atelier</span>
-            <h4 class="font-serif text-lg font-medium text-[#0f0e0d] tracking-wide">Greater Noida Studio</h4>
-            <p class="text-xs text-[#70695e] font-light mt-1.5 leading-relaxed">Individually aged, hand-blended, and inspected in our boutique studio.</p>
+            <span class="text-[9px] sm:text-[10px] tracking-[0.2em] text-[#b8860b] font-semibold uppercase block mb-0.5">03 · Flagship</span>
+            <h4 class="font-serif text-sm sm:text-lg font-medium text-[#0f0e0d] tracking-wide">Greater Noida</h4>
+            <p class="text-[11px] sm:text-xs text-[#70695e] font-light mt-0.5 leading-snug">Hand-blended in small atelier batches.</p>
           </div>
         </div>
 
-        <div class="pt-6 sm:pt-0 sm:px-6 last:pr-0 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-full bg-white border border-[#e6dfd3] flex items-center justify-center shrink-0 text-[#25D366] shadow-xs">
-            <i class="ri-whatsapp-line text-xl"></i>
+        <div class="p-3 sm:p-0 flex items-start gap-2.5 sm:gap-4 bg-white sm:bg-transparent rounded-lg border sm:border-0 border-[#e6dfd3] p-3.5 shadow-xs sm:shadow-none">
+          <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-[#faf8f5] sm:bg-white border border-[#e6dfd3] flex items-center justify-center shrink-0 text-[#25D366]">
+            <i class="ri-whatsapp-line text-lg sm:text-xl"></i>
           </div>
           <div>
-            <span class="text-[10px] tracking-[0.25em] text-[#b8860b] font-semibold uppercase block mb-1">04 · Direct Concierge</span>
-            <h4 class="font-serif text-lg font-medium text-[#0f0e0d] tracking-wide">Instant WhatsApp</h4>
-            <p class="text-xs text-[#70695e] font-light mt-1.5 leading-relaxed">Personalized fragrance advisory and fast ordering via official line.</p>
+            <span class="text-[9px] sm:text-[10px] tracking-[0.2em] text-[#b8860b] font-semibold uppercase block mb-0.5">04 · Concierge</span>
+            <h4 class="font-serif text-sm sm:text-lg font-medium text-[#0f0e0d] tracking-wide">Instant WhatsApp</h4>
+            <p class="text-[11px] sm:text-xs text-[#70695e] font-light mt-0.5 leading-snug">Order via line: +91 95602 91377.</p>
           </div>
         </div>
 
@@ -511,101 +540,93 @@ void main() {
 
 
   <!-- ================= SECTION 3: CAMPAIGN FILMS SHOWCASE (YOUR 3 MP4S) ================= -->
-  <section id="campaign" class="relative bg-[#0f0e0d] text-white py-16 border-b border-[#2c2720]">
+  <!-- Adaptive aspect ratio for Android and cinematic desktop -->
+  <section id="campaign" class="relative bg-[#090d13] text-white py-12 sm:py-16 border-b border-[#2c2720]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="text-center max-w-2xl mx-auto mb-10">
+      <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
         <span class="text-xs font-semibold tracking-[0.25em] text-[#d4af37] uppercase">Visual Poetry</span>
-        <h2 class="font-serif text-3xl sm:text-4xl text-[#faf8f5] font-normal mt-1 mb-3">
+        <h2 class="font-serif text-2xl sm:text-4xl text-[#faf8f5] font-normal mt-1 mb-2">
           The Campaign Films
         </h2>
         <div class="w-12 h-[1px] bg-[#d4af37] mx-auto"></div>
       </div>
 
-      <!-- Video Reel Container -->
-      <div class="relative w-full aspect-[16/9] max-h-[70vh] min-h-[420px] bg-black border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+      <!-- Video Reel Container (Aspect ratio adjusted for mobile & desktop) -->
+      <div class="relative w-full aspect-[4/5] sm:aspect-[16/9] min-h-[360px] sm:min-h-[440px] max-h-[70vh] bg-black border border-white/10 rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl">
         
         <!-- Video 1 -->
         <div class="video-slide active absolute inset-0 w-full h-full">
-          <video class="w-full h-full object-cover object-center" autoplay loop muted playsinline>
+          <video class="w-full h-full object-cover object-center" autoplay loop muted playsinline webkit-playsinline>
             <source src="landing-page-1.mp4" type="video/mp4" />
           </video>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/40"></div>
         </div>
 
         <!-- Video 2 -->
         <div class="video-slide absolute inset-0 w-full h-full">
-          <video class="w-full h-full object-cover object-center" autoplay loop muted playsinline>
+          <video class="w-full h-full object-cover object-center" autoplay loop muted playsinline webkit-playsinline>
             <source src="landing-page-2.mp4" type="video/mp4" />
           </video>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/40"></div>
         </div>
 
         <!-- Video 3 -->
         <div class="video-slide absolute inset-0 w-full h-full">
-          <video class="w-full h-full object-cover object-center" autoplay loop muted playsinline>
+          <video class="w-full h-full object-cover object-center" autoplay loop muted playsinline webkit-playsinline>
             <source src="landing-page-3.mp4" type="video/mp4" />
           </video>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/40"></div>
         </div>
 
         <!-- Reel Overlay Typography -->
-        <div class="absolute inset-0 flex flex-col justify-end p-6 sm:p-12 max-w-3xl pointer-events-none">
-          <p class="text-xs tracking-[0.3em] uppercase text-[#d4af37] font-medium mb-2">Artisanal Distillation · Enduring Sillage</p>
-          <h3 class="font-serif text-2xl sm:text-4xl text-white font-light mb-3 leading-snug">
-            Formulated Without Compromise in Greater Noida.
+        <div class="absolute inset-0 flex flex-col justify-end p-5 sm:p-10 max-w-2xl pointer-events-none">
+          <p class="text-[10px] sm:text-xs tracking-[0.25em] uppercase text-[#d4af37] font-medium mb-1.5">Artisanal Distillation · Enduring Sillage</p>
+          <h3 class="font-serif text-xl sm:text-3xl text-white font-light mb-2 leading-snug">
+            Formulated in Greater Noida.
           </h3>
-          <p class="text-xs sm:text-sm text-slate-300 font-light max-w-lg mb-6 leading-relaxed">
-            Experience our three cinematic chapters showcasing aquatic extractions, imperial amber reserves, and pure Kannauj flower distillates.
+          <p class="text-xs sm:text-sm text-slate-300 font-light mb-4 sm:mb-6 leading-relaxed line-clamp-2 sm:line-clamp-none">
+            Oceanic extractions, imperial amber reserves, and pure Kannauj flower distillates.
           </p>
-          <div class="flex items-center gap-4 pointer-events-auto">
-            <a href="#catalog" class="px-6 py-3 bg-[#d4af37] text-black text-xs font-bold tracking-[0.2em] uppercase hover:bg-white transition-colors">
-              Explore Collection
+          <div class="flex items-center gap-3 pointer-events-auto">
+            <a href="#catalog" class="px-4 sm:px-6 py-2.5 sm:py-3 bg-[#d4af37] text-black text-[11px] sm:text-xs font-bold tracking-[0.16em] uppercase hover:bg-white transition-colors rounded-sm">
+              Explore Catalog
             </a>
-            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel,+I+want+to+order+perfumes" target="_blank" class="px-5 py-3 border border-white/30 text-white text-xs font-medium tracking-[0.2em] uppercase hover:border-[#d4af37] transition-colors flex items-center gap-2">
-              <i class="ri-whatsapp-line text-sm text-[#25D366]"></i> WhatsApp Order
+            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel,+I+want+to+order+perfumes" target="_blank" class="px-3.5 sm:px-5 py-2.5 sm:py-3 border border-white/30 text-white text-[11px] sm:text-xs font-medium tracking-[0.16em] uppercase hover:border-[#d4af37] transition-colors flex items-center gap-1.5 rounded-sm">
+              <i class="ri-whatsapp-line text-sm text-[#25D366]"></i> WhatsApp
             </a>
           </div>
         </div>
 
         <!-- Slide Navigation Controls -->
-        <div class="absolute bottom-6 right-6 sm:bottom-10 sm:right-10 z-20 flex items-center space-x-3 pointer-events-auto">
-          <button id="prev-video" class="w-10 h-10 border border-white/30 bg-black/40 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-black transition-colors" aria-label="Previous film">
-            <i class="ri-arrow-left-s-line text-lg"></i>
+        <div class="absolute top-4 right-4 sm:top-auto sm:bottom-8 sm:right-8 z-20 flex items-center space-x-2 pointer-events-auto">
+          <button id="prev-video" class="w-9 h-9 sm:w-10 sm:h-10 border border-white/30 bg-black/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-black transition-colors rounded-full" aria-label="Previous film">
+            <i class="ri-arrow-left-s-line text-base"></i>
           </button>
-          <span id="slide-indicator" class="text-xs tracking-[0.2em] font-medium text-[#d4af37] px-2">
+          <span id="slide-indicator" class="text-[11px] tracking-[0.18em] font-medium text-[#d4af37] px-2 bg-black/40 rounded-full py-1">
             01 / 03
           </span>
-          <button id="next-video" class="w-10 h-10 border border-white/30 bg-black/40 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-black transition-colors" aria-label="Next film">
-            <i class="ri-arrow-right-s-line text-lg"></i>
+          <button id="next-video" class="w-9 h-9 sm:w-10 sm:h-10 border border-white/30 bg-black/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-black transition-colors rounded-full" aria-label="Next film">
+            <i class="ri-arrow-right-s-line text-base"></i>
           </button>
         </div>
       </div>
 
-      <!-- 3-Tab Film Selector -->
-      <div class="grid grid-cols-1 md:grid-cols-3 border border-[#2c2720] bg-[#141210] mt-4 rounded-xl overflow-hidden text-xs uppercase tracking-[0.16em]">
-        <button onclick="setVideoSlide(0)" class="film-tab active py-4 px-6 text-left border-b md:border-b-0 md:border-r border-[#2c2720] hover:text-white transition-colors flex items-center justify-between">
-          <div>
-            <span class="block text-[10px] text-[#d4af37] font-medium">Film 01</span>
-            <span class="text-white font-medium">Oceanic & Citrus Infusions</span>
-          </div>
-          <i class="ri-play-circle-line text-lg text-[#d4af37]"></i>
+      <!-- Compact 3-Tab Film Selector -->
+      <div class="grid grid-cols-3 border border-[#2c2720] bg-[#141210] mt-3 sm:mt-4 rounded-lg overflow-hidden text-[10px] sm:text-xs uppercase tracking-[0.12em] sm:tracking-[0.16em]">
+        <button onclick="setVideoSlide(0)" class="film-tab active py-2.5 sm:py-3.5 px-2 sm:px-4 text-center sm:text-left border-r border-[#2c2720] hover:text-white transition-colors">
+          <span class="block text-[9px] text-[#d4af37] font-medium">Film 01</span>
+          <span class="truncate block text-slate-200">Oceanic</span>
         </button>
 
-        <button onclick="setVideoSlide(1)" class="film-tab py-4 px-6 text-left border-b md:border-b-0 md:border-r border-[#2c2720] hover:text-white transition-colors flex items-center justify-between">
-          <div>
-            <span class="block text-[10px] text-[#d4af37] font-medium">Film 02</span>
-            <span class="text-white font-medium">Royal Ouds & Amber Reserves</span>
-          </div>
-          <i class="ri-play-circle-line text-lg text-[#d4af37]"></i>
+        <button onclick="setVideoSlide(1)" class="film-tab py-2.5 sm:py-3.5 px-2 sm:px-4 text-center sm:text-left border-r border-[#2c2720] hover:text-white transition-colors">
+          <span class="block text-[9px] text-[#d4af37] font-medium">Film 02</span>
+          <span class="truncate block text-slate-200">Royal Oud</span>
         </button>
 
-        <button onclick="setVideoSlide(2)" class="film-tab py-4 px-6 text-left hover:text-white transition-colors flex items-center justify-between">
-          <div>
-            <span class="block text-[10px] text-[#d4af37] font-medium">Film 03</span>
-            <span class="text-white font-medium">Floral Absolutes & Pure Attar</span>
-          </div>
-          <i class="ri-play-circle-line text-lg text-[#d4af37]"></i>
+        <button onclick="setVideoSlide(2)" class="film-tab py-2.5 sm:py-3.5 px-2 sm:px-4 text-center sm:text-left hover:text-white transition-colors">
+          <span class="block text-[9px] text-[#d4af37] font-medium">Film 03</span>
+          <span class="truncate block text-slate-200">Attars</span>
         </button>
       </div>
 
@@ -614,72 +635,77 @@ void main() {
 
 
   <!-- ================= SECTION 4: CATEGORIES ================= -->
-  <section id="collections" class="py-20 bg-white text-[#1a1917]">
+  <section id="collections" class="py-12 sm:py-20 bg-white text-[#1a1917]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="text-center max-w-2xl mx-auto mb-16">
+      <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-14">
         <span class="text-xs font-semibold tracking-[0.25em] text-[#b8860b] uppercase">Artisanal Classification</span>
-        <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#0f0e0d] mt-2 mb-4">
-          Discover The Fragrance Houses
+        <h2 class="font-serif text-2xl sm:text-4xl text-[#0f0e0d] font-normal mt-1 mb-2 sm:mb-3">
+          The Fragrance Houses
         </h2>
-        <div class="w-12 h-[1px] bg-[#b8860b] mx-auto mb-4"></div>
-        <p class="text-sm text-[#70695e] font-light leading-relaxed">
-          Each olfactory creation is formulated with rare botanical essences, carefully cured for optimum diffusion and sublime trail.
-        </p>
+        <div class="w-12 h-[1px] bg-[#b8860b] mx-auto"></div>
       </div>
 
-      <!-- Categories 4-Column Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Categories 2-Column Grid on Mobile for User-Friendly Browsing -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         
         <!-- Category 1: Perfumes -->
-        <div class="group border border-[#e6dfd3] bg-[#faf8f5] p-6 text-center hover:border-[#b8860b] hover:shadow-md transition-all duration-300">
-          <div class="aspect-[4/5] overflow-hidden bg-white mb-6 p-4 flex items-center justify-center">
-            <img src="https://www.yashelfragrance.com/assets/COOL%20WATER%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Yashel Eau De Parfum" class="max-h-full object-contain group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+        <div class="group border border-[#e6dfd3] bg-[#faf8f5] p-3 sm:p-5 text-center hover:border-[#b8860b] hover:shadow-md transition-all duration-300 rounded-lg flex flex-col justify-between">
+          <div>
+            <div class="aspect-[4/5] overflow-hidden bg-white mb-3 sm:mb-4 p-2 sm:p-3 flex items-center justify-center rounded">
+              <img src="https://www.yashelfragrance.com/assets/COOL%20WATER%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Yashel Eau De Parfum" class="max-h-full object-contain group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+            </div>
+            <span class="text-[9px] tracking-[0.16em] uppercase text-[#70695e] font-medium block">100 ML</span>
+            <h3 class="font-serif text-base sm:text-xl text-[#0f0e0d] font-medium mt-0.5 mb-1">Eau De Parfum</h3>
+            <p class="text-[11px] text-[#70695e] font-light hidden sm:block mb-3">Extrait formulations with 12–24h presence.</p>
           </div>
-          <span class="text-[10px] tracking-[0.2em] uppercase text-[#70695e] font-medium block mb-1">Volume: 100 ML</span>
-          <h3 class="font-serif text-2xl text-[#0f0e0d] font-medium mb-2">Eau De Parfum</h3>
-          <p class="text-xs text-[#70695e] mb-4 font-light leading-relaxed">French-inspired extrait formulations with elevated scent longevity.</p>
-          <button onclick="filterCatalog('perfume')" class="inline-block text-xs font-semibold tracking-[0.16em] uppercase text-[#0f0e0d] group-hover:text-[#b8860b] transition-colors border-b border-[#0f0e0d] group-hover:border-[#b8860b] pb-0.5">
+          <button onclick="filterCatalog('perfume')" class="mt-2 text-[11px] font-semibold tracking-[0.14em] uppercase text-[#b8860b] border-b border-[#b8860b] pb-0.5 inline-block mx-auto">
             View Perfumes &rarr;
           </button>
         </div>
 
         <!-- Category 2: Attars -->
-        <div class="group border border-[#e6dfd3] bg-[#faf8f5] p-6 text-center hover:border-[#b8860b] hover:shadow-md transition-all duration-300">
-          <div class="aspect-[4/5] overflow-hidden bg-white mb-6 p-4 flex items-center justify-center">
-            <img src="https://www.yashelfragrance.com/assets/Rose%20Musk%20Yashel%20fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Yashel Pure Non-Alcoholic Attar" class="max-h-full object-contain group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+        <div class="group border border-[#e6dfd3] bg-[#faf8f5] p-3 sm:p-5 text-center hover:border-[#b8860b] hover:shadow-md transition-all duration-300 rounded-lg flex flex-col justify-between">
+          <div>
+            <div class="aspect-[4/5] overflow-hidden bg-white mb-3 sm:mb-4 p-2 sm:p-3 flex items-center justify-center rounded">
+              <img src="https://www.yashelfragrance.com/assets/Rose%20Musk%20Yashel%20fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Yashel Pure Non-Alcoholic Attar" class="max-h-full object-contain group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+            </div>
+            <span class="text-[9px] tracking-[0.16em] uppercase text-[#70695e] font-medium block">12 ML Pure Oil</span>
+            <h3 class="font-serif text-base sm:text-xl text-[#0f0e0d] font-medium mt-0.5 mb-1">Artisanal Attars</h3>
+            <p class="text-[11px] text-[#70695e] font-light hidden sm:block mb-3">Alcohol-free concentrated perfume oils.</p>
           </div>
-          <span class="text-[10px] tracking-[0.2em] uppercase text-[#70695e] font-medium block mb-1">Volume: 12 ML Pure Oil</span>
-          <h3 class="font-serif text-2xl text-[#0f0e0d] font-medium mb-2">Artisanal Attars</h3>
-          <p class="text-xs text-[#70695e] mb-4 font-light leading-relaxed">Alcohol-free concentrated perfume oil roll-ons with intimate sillage.</p>
-          <button onclick="filterCatalog('atar')" class="inline-block text-xs font-semibold tracking-[0.16em] uppercase text-[#0f0e0d] group-hover:text-[#b8860b] transition-colors border-b border-[#0f0e0d] group-hover:border-[#b8860b] pb-0.5">
+          <button onclick="filterCatalog('atar')" class="mt-2 text-[11px] font-semibold tracking-[0.14em] uppercase text-[#b8860b] border-b border-[#b8860b] pb-0.5 inline-block mx-auto">
             View Attars &rarr;
           </button>
         </div>
 
         <!-- Category 3: Car Freshners & Diffusers -->
-        <div class="group border border-[#e6dfd3] bg-[#faf8f5] p-6 text-center hover:border-[#b8860b] hover:shadow-md transition-all duration-300">
-          <div class="aspect-[4/5] overflow-hidden bg-white mb-6 p-4 flex items-center justify-center">
-            <img src="https://www.yashelfragrance.com/assets/DUBAI%20GOLD%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Car Perfume & Diffuser" class="max-h-full object-contain group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+        <div class="group border border-[#e6dfd3] bg-[#faf8f5] p-3 sm:p-5 text-center hover:border-[#b8860b] hover:shadow-md transition-all duration-300 rounded-lg flex flex-col justify-between">
+          <div>
+            <div class="aspect-[4/5] overflow-hidden bg-white mb-3 sm:mb-4 p-2 sm:p-3 flex items-center justify-center rounded">
+              <img src="https://www.yashelfragrance.com/assets/DUBAI%20GOLD%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Car Perfume & Diffuser" class="max-h-full object-contain group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+            </div>
+            <span class="text-[9px] tracking-[0.16em] uppercase text-[#70695e] font-medium block">Ambience</span>
+            <h3 class="font-serif text-base sm:text-xl text-[#0f0e0d] font-medium mt-0.5 mb-1">Car & Room</h3>
+            <p class="text-[11px] text-[#70695e] font-light hidden sm:block mb-3">Wooden cap diffusers and room mists.</p>
           </div>
-          <span class="text-[10px] tracking-[0.2em] uppercase text-[#70695e] font-medium block mb-1">Luxury Ambience</span>
-          <h3 class="font-serif text-2xl text-[#0f0e0d] font-medium mb-2">Car & Room Mists</h3>
-          <p class="text-xs text-[#70695e] mb-4 font-light leading-relaxed">Natural wooden diffusers & room freshners for signature luxury spaces.</p>
-          <button onclick="filterCatalog('room')" class="inline-block text-xs font-semibold tracking-[0.16em] uppercase text-[#0f0e0d] group-hover:text-[#b8860b] transition-colors border-b border-[#0f0e0d] group-hover:border-[#b8860b] pb-0.5">
+          <button onclick="filterCatalog('room')" class="mt-2 text-[11px] font-semibold tracking-[0.14em] uppercase text-[#b8860b] border-b border-[#b8860b] pb-0.5 inline-block mx-auto">
             View Ambience &rarr;
           </button>
         </div>
 
         <!-- Category 4: Bespoke Gift Hampers -->
-        <div class="group border border-[#e6dfd3] bg-[#faf8f5] p-6 text-center hover:border-[#b8860b] hover:shadow-md transition-all duration-300">
-          <div class="aspect-[4/5] overflow-hidden bg-white mb-6 p-4 flex items-center justify-center">
-            <img src="https://www.yashelfragrance.com/assets/DUNHIL%20BLUE%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Bespoke Gift Boxes" class="max-h-full object-contain group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+        <div class="group border border-[#e6dfd3] bg-[#faf8f5] p-3 sm:p-5 text-center hover:border-[#b8860b] hover:shadow-md transition-all duration-300 rounded-lg flex flex-col justify-between">
+          <div>
+            <div class="aspect-[4/5] overflow-hidden bg-white mb-3 sm:mb-4 p-2 sm:p-3 flex items-center justify-center rounded">
+              <img src="https://www.yashelfragrance.com/assets/DUNHIL%20BLUE%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Bespoke Gift Boxes" class="max-h-full object-contain group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+            </div>
+            <span class="text-[9px] tracking-[0.16em] uppercase text-[#70695e] font-medium block">Custom</span>
+            <h3 class="font-serif text-base sm:text-xl text-[#0f0e0d] font-medium mt-0.5 mb-1">Royal Gift Sets</h3>
+            <p class="text-[11px] text-[#70695e] font-light hidden sm:block mb-3">Velvet-lined gift boxes for occasions.</p>
           </div>
-          <span class="text-[10px] tracking-[0.2em] uppercase text-[#70695e] font-medium block mb-1">Custom Presentation</span>
-          <h3 class="font-serif text-2xl text-[#0f0e0d] font-medium mb-2">Royal Gift Sets</h3>
-          <p class="text-xs text-[#70695e] mb-4 font-light leading-relaxed">Velvet-lined gift boxes tailored for weddings, executives, and gifting.</p>
-          <button onclick="filterCatalog('hamper')" class="inline-block text-xs font-semibold tracking-[0.16em] uppercase text-[#0f0e0d] group-hover:text-[#b8860b] transition-colors border-b border-[#0f0e0d] group-hover:border-[#b8860b] pb-0.5">
-            View Gift Sets &rarr;
+          <button onclick="filterCatalog('hamper')" class="mt-2 text-[11px] font-semibold tracking-[0.14em] uppercase text-[#b8860b] border-b border-[#b8860b] pb-0.5 inline-block mx-auto">
+            View Sets &rarr;
           </button>
         </div>
 
@@ -690,247 +716,248 @@ void main() {
 
 
   <!-- ================= SECTION 5: INTERACTIVE PRODUCT DIRECTORY ================= -->
-  <section id="catalog" class="py-20 bg-[#faf8f5] text-[#1a1917] border-t border-[#e6dfd3]">
+  <!-- Horizontal swipeable category chips on mobile + 2-column product grid -->
+  <section id="catalog" class="py-12 sm:py-20 bg-[#faf8f5] text-[#1a1917] border-t border-[#e6dfd3]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-[#e6dfd3] pb-6">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-10 border-b border-[#e6dfd3] pb-4 sm:pb-6">
         <div>
           <span class="text-xs font-semibold tracking-[0.25em] text-[#b8860b] uppercase">Artisanal Master Catalog</span>
-          <h2 class="font-serif text-3xl sm:text-4xl text-[#0f0e0d] font-normal mt-1">
-            Signature Creations
+          <h2 class="font-serif text-2xl sm:text-4xl text-[#0f0e0d] font-normal mt-1">
+            Signature Collection
           </h2>
         </div>
 
-        <!-- Filter Tab Buttons -->
-        <div class="flex flex-wrap gap-2 mt-6 md:mt-0">
-          <button onclick="filterCatalog('all')" class="cat-btn active px-4 py-2 text-xs font-semibold tracking-[0.14em] uppercase border border-[#0f0e0d] bg-[#0f0e0d] text-white transition-all">
-            All Products
+        <!-- Filter Chips: Swipeable on Android, Wrap on Desktop -->
+        <div class="flex overflow-x-auto no-scrollbar space-x-2 mt-4 md:mt-0 py-1 -mx-4 px-4 sm:mx-0 sm:px-0">
+          <button onclick="filterCatalog('all')" class="cat-btn active shrink-0 px-3.5 sm:px-4 py-2 text-[11px] sm:text-xs font-semibold tracking-[0.12em] uppercase border border-[#0f0e0d] bg-[#0f0e0d] text-white rounded-full transition-all">
+            All
           </button>
-          <button onclick="filterCatalog('perfume')" class="cat-btn px-4 py-2 text-xs font-semibold tracking-[0.14em] uppercase border border-[#e6dfd3] bg-white text-[#1a1917] hover:border-[#b8860b] transition-all">
-            100ML Perfumes
+          <button onclick="filterCatalog('perfume')" class="cat-btn shrink-0 px-3.5 sm:px-4 py-2 text-[11px] sm:text-xs font-semibold tracking-[0.12em] uppercase border border-[#e6dfd3] bg-white text-[#1a1917] hover:border-[#b8860b] rounded-full transition-all">
+            100ML EDP
           </button>
-          <button onclick="filterCatalog('atar')" class="cat-btn px-4 py-2 text-xs font-semibold tracking-[0.14em] uppercase border border-[#e6dfd3] bg-white text-[#1a1917] hover:border-[#b8860b] transition-all">
-            Pure Attars (12ML)
+          <button onclick="filterCatalog('atar')" class="cat-btn shrink-0 px-3.5 sm:px-4 py-2 text-[11px] sm:text-xs font-semibold tracking-[0.12em] uppercase border border-[#e6dfd3] bg-white text-[#1a1917] hover:border-[#b8860b] rounded-full transition-all">
+            Pure Attar (12ML)
           </button>
-          <button onclick="filterCatalog('room')" class="cat-btn px-4 py-2 text-xs font-semibold tracking-[0.14em] uppercase border border-[#e6dfd3] bg-white text-[#1a1917] hover:border-[#b8860b] transition-all">
+          <button onclick="filterCatalog('room')" class="cat-btn shrink-0 px-3.5 sm:px-4 py-2 text-[11px] sm:text-xs font-semibold tracking-[0.12em] uppercase border border-[#e6dfd3] bg-white text-[#1a1917] hover:border-[#b8860b] rounded-full transition-all">
             Car & Room
           </button>
-          <button onclick="filterCatalog('hamper')" class="cat-btn px-4 py-2 text-xs font-semibold tracking-[0.14em] uppercase border border-[#e6dfd3] bg-white text-[#1a1917] hover:border-[#b8860b] transition-all">
-            Gift Sets
+          <button onclick="filterCatalog('hamper')" class="cat-btn shrink-0 px-3.5 sm:px-4 py-2 text-[11px] sm:text-xs font-semibold tracking-[0.12em] uppercase border border-[#e6dfd3] bg-white text-[#1a1917] hover:border-[#b8860b] rounded-full transition-all">
+            Hampers
           </button>
         </div>
       </div>
 
-      <!-- Products Grid -->
-      <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Products Grid: 2 columns on Mobile / 4 on Desktop -->
+      <div id="product-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         
         <!-- Product 1: Cool Water -->
-        <div class="product-card group bg-white border border-[#e6dfd3] p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300" data-cat="perfume">
+        <div class="product-card group bg-white border border-[#e6dfd3] p-3 sm:p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300 rounded-lg" data-cat="perfume">
           <div>
-            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-4 p-4 flex items-center justify-center overflow-hidden">
-              <span class="absolute top-2 left-2 text-[10px] tracking-[0.15em] uppercase font-semibold bg-[#0f0e0d] text-white px-2 py-1">
-                Best Seller
+            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-2.5 sm:mb-4 p-2 sm:p-4 flex items-center justify-center overflow-hidden rounded">
+              <span class="absolute top-1.5 left-1.5 text-[9px] tracking-[0.12em] uppercase font-semibold bg-[#0f0e0d] text-white px-1.5 py-0.5 rounded">
+                Bestseller
               </span>
               <img src="https://www.yashelfragrance.com/assets/COOL%20WATER%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Cool Water Yashel Fragrance 100ml" class="max-h-full object-contain" loading="lazy" />
             </div>
-            <span class="text-[10px] tracking-[0.18em] uppercase text-[#70695e] font-medium">Eau De Parfum · 100 ML</span>
-            <h3 class="font-serif text-xl font-medium text-[#0f0e0d] mt-1 mb-1">Cool Water Extrait</h3>
-            <p class="text-xs text-[#70695e] font-light mb-3">Fresh Aquatic, Crisp Peppermint, Lavender, Ambergris.</p>
-            <div class="flex items-center space-x-1 text-[#b8860b] text-xs mb-3">
+            <span class="text-[9px] sm:text-[10px] tracking-[0.14em] uppercase text-[#70695e] font-medium block">100 ML EDP</span>
+            <h3 class="font-serif text-sm sm:text-lg font-medium text-[#0f0e0d] mt-0.5 mb-1 leading-snug">Cool Water Extrait</h3>
+            <p class="text-[11px] text-[#70695e] font-light mb-2 line-clamp-1 sm:line-clamp-2">Aquatic, Peppermint, Lavender, Ambergris.</p>
+            <div class="flex items-center space-x-1 text-[#b8860b] text-[10px] sm:text-xs mb-2">
               <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
-              <span class="text-[#70695e] text-[11px] ml-1.5">(4.9/5)</span>
+              <span class="text-[#70695e] ml-1">(4.9)</span>
             </div>
           </div>
-          <div class="pt-4 border-t border-[#e6dfd3] flex items-center justify-between">
+          <div class="pt-2 sm:pt-3 border-t border-[#e6dfd3] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <span class="text-base font-semibold text-[#0f0e0d]">₹1,199</span>
-              <span class="text-xs text-[#70695e] line-through ml-1.5">₹1,999</span>
+              <span class="text-sm sm:text-base font-semibold text-[#0f0e0d]">₹1,199</span>
+              <span class="text-[10px] text-[#70695e] line-through ml-1">₹1,999</span>
             </div>
-            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+Cool+Water+100ML+(Rs+1199)&type=phone_number&app_absent=0" target="_blank" class="px-3.5 py-2 bg-[#0f0e0d] text-white text-[11px] tracking-[0.15em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center gap-1.5">
+            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+Cool+Water+100ML+(Rs+1199)&type=phone_number&app_absent=0" target="_blank" class="w-full sm:w-auto px-2.5 sm:px-3.5 py-1.5 sm:py-2 bg-[#0f0e0d] text-white text-[10px] sm:text-[11px] tracking-[0.1em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center justify-center gap-1 rounded">
               <i class="ri-whatsapp-line text-sm text-[#25D366]"></i> Order
             </a>
           </div>
         </div>
 
         <!-- Product 2: Creed Aventus -->
-        <div class="product-card group bg-white border border-[#e6dfd3] p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300" data-cat="perfume">
+        <div class="product-card group bg-white border border-[#e6dfd3] p-3 sm:p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300 rounded-lg" data-cat="perfume">
           <div>
-            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-4 p-4 flex items-center justify-center overflow-hidden">
-              <span class="absolute top-2 left-2 text-[10px] tracking-[0.15em] uppercase font-semibold bg-[#b8860b] text-white px-2 py-1">
+            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-2.5 sm:mb-4 p-2 sm:p-4 flex items-center justify-center overflow-hidden rounded">
+              <span class="absolute top-1.5 left-1.5 text-[9px] tracking-[0.12em] uppercase font-semibold bg-[#b8860b] text-white px-1.5 py-0.5 rounded">
                 Imperial
               </span>
               <img src="https://www.yashelfragrance.com/assets/CREED%20AVENTUS%20%20Yashel%20Fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Creed Aventus Yashel Fragrance 100ml" class="max-h-full object-contain" loading="lazy" />
             </div>
-            <span class="text-[10px] tracking-[0.18em] uppercase text-[#70695e] font-medium">Eau De Parfum · 100 ML</span>
-            <h3 class="font-serif text-xl font-medium text-[#0f0e0d] mt-1 mb-1">Aventus Imperial</h3>
-            <p class="text-xs text-[#70695e] font-light mb-3">Smoky Birch, Italian Bergamot, Blackcurrant, Oakmoss.</p>
-            <div class="flex items-center space-x-1 text-[#b8860b] text-xs mb-3">
+            <span class="text-[9px] sm:text-[10px] tracking-[0.14em] uppercase text-[#70695e] font-medium block">100 ML EDP</span>
+            <h3 class="font-serif text-sm sm:text-lg font-medium text-[#0f0e0d] mt-0.5 mb-1 leading-snug">Aventus Imperial</h3>
+            <p class="text-[11px] text-[#70695e] font-light mb-2 line-clamp-1 sm:line-clamp-2">Smoky Birch, Bergamot, Blackcurrant.</p>
+            <div class="flex items-center space-x-1 text-[#b8860b] text-[10px] sm:text-xs mb-2">
               <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
-              <span class="text-[#70695e] text-[11px] ml-1.5">(5.0/5)</span>
+              <span class="text-[#70695e] ml-1">(5.0)</span>
             </div>
           </div>
-          <div class="pt-4 border-t border-[#e6dfd3] flex items-center justify-between">
+          <div class="pt-2 sm:pt-3 border-t border-[#e6dfd3] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <span class="text-base font-semibold text-[#0f0e0d]">₹1,199</span>
-              <span class="text-xs text-[#70695e] line-through ml-1.5">₹2,199</span>
+              <span class="text-sm sm:text-base font-semibold text-[#0f0e0d]">₹1,199</span>
+              <span class="text-[10px] text-[#70695e] line-through ml-1">₹2,199</span>
             </div>
-            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+Creed+Aventus+100ML+(Rs+1199)&type=phone_number&app_absent=0" target="_blank" class="px-3.5 py-2 bg-[#0f0e0d] text-white text-[11px] tracking-[0.15em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center gap-1.5">
+            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+Creed+Aventus+100ML+(Rs+1199)&type=phone_number&app_absent=0" target="_blank" class="w-full sm:w-auto px-2.5 sm:px-3.5 py-1.5 sm:py-2 bg-[#0f0e0d] text-white text-[10px] sm:text-[11px] tracking-[0.1em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center justify-center gap-1 rounded">
               <i class="ri-whatsapp-line text-sm text-[#25D366]"></i> Order
             </a>
           </div>
         </div>
 
         <!-- Product 3: Rose Musk -->
-        <div class="product-card group bg-white border border-[#e6dfd3] p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300" data-cat="perfume">
+        <div class="product-card group bg-white border border-[#e6dfd3] p-3 sm:p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300 rounded-lg" data-cat="perfume">
           <div>
-            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-4 p-4 flex items-center justify-center overflow-hidden">
+            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-2.5 sm:mb-4 p-2 sm:p-4 flex items-center justify-center overflow-hidden rounded">
               <img src="https://www.yashelfragrance.com/assets/Rose%20Musk%20Yashel%20fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Rose Musk Yashel Fragrance 100ml" class="max-h-full object-contain" loading="lazy" />
             </div>
-            <span class="text-[10px] tracking-[0.18em] uppercase text-[#70695e] font-medium">Eau De Parfum · 100 ML</span>
-            <h3 class="font-serif text-xl font-medium text-[#0f0e0d] mt-1 mb-1">Rose Musk Sublime</h3>
-            <p class="text-xs text-[#70695e] font-light mb-3">Damascena Rose, White Musks, Amber Dew, Jasmine.</p>
-            <div class="flex items-center space-x-1 text-[#b8860b] text-xs mb-3">
+            <span class="text-[9px] sm:text-[10px] tracking-[0.14em] uppercase text-[#70695e] font-medium block">100 ML EDP</span>
+            <h3 class="font-serif text-sm sm:text-lg font-medium text-[#0f0e0d] mt-0.5 mb-1 leading-snug">Rose Musk Sublime</h3>
+            <p class="text-[11px] text-[#70695e] font-light mb-2 line-clamp-1 sm:line-clamp-2">Damask Rose, White Musks, Amber.</p>
+            <div class="flex items-center space-x-1 text-[#b8860b] text-[10px] sm:text-xs mb-2">
               <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
-              <span class="text-[#70695e] text-[11px] ml-1.5">(4.9/5)</span>
+              <span class="text-[#70695e] ml-1">(4.9)</span>
             </div>
           </div>
-          <div class="pt-4 border-t border-[#e6dfd3] flex items-center justify-between">
+          <div class="pt-2 sm:pt-3 border-t border-[#e6dfd3] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <span class="text-base font-semibold text-[#0f0e0d]">₹1,199</span>
-              <span class="text-xs text-[#70695e] line-through ml-1.5">₹1,899</span>
+              <span class="text-sm sm:text-base font-semibold text-[#0f0e0d]">₹1,199</span>
+              <span class="text-[10px] text-[#70695e] line-through ml-1">₹1,899</span>
             </div>
-            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+Rose+Musk+100ML+(Rs+1199)&type=phone_number&app_absent=0" target="_blank" class="px-3.5 py-2 bg-[#0f0e0d] text-white text-[11px] tracking-[0.15em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center gap-1.5">
+            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+Rose+Musk+100ML+(Rs+1199)&type=phone_number&app_absent=0" target="_blank" class="w-full sm:w-auto px-2.5 sm:px-3.5 py-1.5 sm:py-2 bg-[#0f0e0d] text-white text-[10px] sm:text-[11px] tracking-[0.1em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center justify-center gap-1 rounded">
               <i class="ri-whatsapp-line text-sm text-[#25D366]"></i> Order
             </a>
           </div>
         </div>
 
         <!-- Product 4: Dunhil Blue -->
-        <div class="product-card group bg-white border border-[#e6dfd3] p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300" data-cat="perfume">
+        <div class="product-card group bg-white border border-[#e6dfd3] p-3 sm:p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300 rounded-lg" data-cat="perfume">
           <div>
-            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-4 p-4 flex items-center justify-center overflow-hidden">
+            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-2.5 sm:mb-4 p-2 sm:p-4 flex items-center justify-center overflow-hidden rounded">
               <img src="https://www.yashelfragrance.com/assets/DUNHIL%20BLUE%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Dunhil Blue Yashel Fragrance" class="max-h-full object-contain" loading="lazy" />
             </div>
-            <span class="text-[10px] tracking-[0.18em] uppercase text-[#70695e] font-medium">Eau De Parfum · 100 ML</span>
-            <h3 class="font-serif text-xl font-medium text-[#0f0e0d] mt-1 mb-1">Dunhil Blue Edition</h3>
-            <p class="text-xs text-[#70695e] font-light mb-3">Crisp Litchi, Mandarin Orange, Lotus Blossom, Tonka.</p>
-            <div class="flex items-center space-x-1 text-[#b8860b] text-xs mb-3">
+            <span class="text-[9px] sm:text-[10px] tracking-[0.14em] uppercase text-[#70695e] font-medium block">100 ML EDP</span>
+            <h3 class="font-serif text-sm sm:text-lg font-medium text-[#0f0e0d] mt-0.5 mb-1 leading-snug">Dunhil Blue Edition</h3>
+            <p class="text-[11px] text-[#70695e] font-light mb-2 line-clamp-1 sm:line-clamp-2">Crisp Litchi, Mandarin, Lotus, Tonka.</p>
+            <div class="flex items-center space-x-1 text-[#b8860b] text-[10px] sm:text-xs mb-2">
               <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-half-fill"></i>
-              <span class="text-[#70695e] text-[11px] ml-1.5">(4.8/5)</span>
+              <span class="text-[#70695e] ml-1">(4.8)</span>
             </div>
           </div>
-          <div class="pt-4 border-t border-[#e6dfd3] flex items-center justify-between">
+          <div class="pt-2 sm:pt-3 border-t border-[#e6dfd3] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <span class="text-base font-semibold text-[#0f0e0d]">₹1,199</span>
-              <span class="text-xs text-[#70695e] line-through ml-1.5">₹1,999</span>
+              <span class="text-sm sm:text-base font-semibold text-[#0f0e0d]">₹1,199</span>
+              <span class="text-[10px] text-[#70695e] line-through ml-1">₹1,999</span>
             </div>
-            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+Dunhill+Blue+100ML+(Rs+1199)&type=phone_number&app_absent=0" target="_blank" class="px-3.5 py-2 bg-[#0f0e0d] text-white text-[11px] tracking-[0.15em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center gap-1.5">
+            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+Dunhill+Blue+100ML+(Rs+1199)&type=phone_number&app_absent=0" target="_blank" class="w-full sm:w-auto px-2.5 sm:px-3.5 py-1.5 sm:py-2 bg-[#0f0e0d] text-white text-[10px] sm:text-[11px] tracking-[0.1em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center justify-center gap-1 rounded">
               <i class="ri-whatsapp-line text-sm text-[#25D366]"></i> Order
             </a>
           </div>
         </div>
 
         <!-- Product 5: White Oud (Pure Attar) -->
-        <div class="product-card group bg-white border border-[#e6dfd3] p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300" data-cat="atar">
+        <div class="product-card group bg-white border border-[#e6dfd3] p-3 sm:p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300 rounded-lg" data-cat="atar">
           <div>
-            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-4 p-4 flex items-center justify-center overflow-hidden">
-              <span class="absolute top-2 left-2 text-[10px] tracking-[0.15em] uppercase font-semibold bg-[#8c6507] text-white px-2 py-1">
-                Pure Attar
+            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-2.5 sm:mb-4 p-2 sm:p-4 flex items-center justify-center overflow-hidden rounded">
+              <span class="absolute top-1.5 left-1.5 text-[9px] tracking-[0.12em] uppercase font-semibold bg-[#8c6507] text-white px-1.5 py-0.5 rounded">
+                Attar
               </span>
               <img src="https://www.yashelfragrance.com/assets/White%20OUD%20Yashel%20fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="White Oud Pure Attar" class="max-h-full object-contain" loading="lazy" />
             </div>
-            <span class="text-[10px] tracking-[0.18em] uppercase text-[#70695e] font-medium">100% Non-Alcoholic · 12 ML</span>
-            <h3 class="font-serif text-xl font-medium text-[#0f0e0d] mt-1 mb-1">White OUD Pure Oil</h3>
-            <p class="text-xs text-[#70695e] font-light mb-3">Velvety White Agarwood, Cashmere Saffron, White Amber.</p>
-            <div class="flex items-center space-x-1 text-[#b8860b] text-xs mb-3">
+            <span class="text-[9px] sm:text-[10px] tracking-[0.14em] uppercase text-[#70695e] font-medium block">12 ML Pure Oil</span>
+            <h3 class="font-serif text-sm sm:text-lg font-medium text-[#0f0e0d] mt-0.5 mb-1 leading-snug">White OUD Pure Oil</h3>
+            <p class="text-[11px] text-[#70695e] font-light mb-2 line-clamp-1 sm:line-clamp-2">White Agarwood, Saffron, Amber.</p>
+            <div class="flex items-center space-x-1 text-[#b8860b] text-[10px] sm:text-xs mb-2">
               <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
-              <span class="text-[#70695e] text-[11px] ml-1.5">(5.0/5)</span>
+              <span class="text-[#70695e] ml-1">(5.0)</span>
             </div>
           </div>
-          <div class="pt-4 border-t border-[#e6dfd3] flex items-center justify-between">
+          <div class="pt-2 sm:pt-3 border-t border-[#e6dfd3] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <span class="text-base font-semibold text-[#0f0e0d]">₹699</span>
-              <span class="text-xs text-[#70695e] line-through ml-1.5">₹1,199</span>
+              <span class="text-sm sm:text-base font-semibold text-[#0f0e0d]">₹699</span>
+              <span class="text-[10px] text-[#70695e] line-through ml-1">₹1,199</span>
             </div>
-            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+White+Oud+Attar+12ML+(Rs+699)&type=phone_number&app_absent=0" target="_blank" class="px-3.5 py-2 bg-[#0f0e0d] text-white text-[11px] tracking-[0.15em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center gap-1.5">
+            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+White+Oud+Attar+12ML+(Rs+699)&type=phone_number&app_absent=0" target="_blank" class="w-full sm:w-auto px-2.5 sm:px-3.5 py-1.5 sm:py-2 bg-[#0f0e0d] text-white text-[10px] sm:text-[11px] tracking-[0.1em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center justify-center gap-1 rounded">
               <i class="ri-whatsapp-line text-sm text-[#25D366]"></i> Order
             </a>
           </div>
         </div>
 
         <!-- Product 6: Dubai Gold -->
-        <div class="product-card group bg-white border border-[#e6dfd3] p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300" data-cat="perfume">
+        <div class="product-card group bg-white border border-[#e6dfd3] p-3 sm:p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300 rounded-lg" data-cat="perfume">
           <div>
-            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-4 p-4 flex items-center justify-center overflow-hidden">
+            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-2.5 sm:mb-4 p-2 sm:p-4 flex items-center justify-center overflow-hidden rounded">
               <img src="https://www.yashelfragrance.com/assets/DUBAI%20GOLD%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Dubai Gold Yashel Fragrance" class="max-h-full object-contain" loading="lazy" />
             </div>
-            <span class="text-[10px] tracking-[0.18em] uppercase text-[#70695e] font-medium">Eau De Parfum · 100 ML</span>
-            <h3 class="font-serif text-xl font-medium text-[#0f0e0d] mt-1 mb-1">Dubai Gold Prestige</h3>
-            <p class="text-xs text-[#70695e] font-light mb-3">Oriental Spices, Rich Golden Amber, Vanilla, Cedarwood.</p>
-            <div class="flex items-center space-x-1 text-[#b8860b] text-xs mb-3">
+            <span class="text-[9px] sm:text-[10px] tracking-[0.14em] uppercase text-[#70695e] font-medium block">100 ML EDP</span>
+            <h3 class="font-serif text-sm sm:text-lg font-medium text-[#0f0e0d] mt-0.5 mb-1 leading-snug">Dubai Gold Prestige</h3>
+            <p class="text-[11px] text-[#70695e] font-light mb-2 line-clamp-1 sm:line-clamp-2">Oriental Spices, Golden Amber, Vanilla.</p>
+            <div class="flex items-center space-x-1 text-[#b8860b] text-[10px] sm:text-xs mb-2">
               <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
-              <span class="text-[#70695e] text-[11px] ml-1.5">(4.9/5)</span>
+              <span class="text-[#70695e] ml-1">(4.9)</span>
             </div>
           </div>
-          <div class="pt-4 border-t border-[#e6dfd3] flex items-center justify-between">
+          <div class="pt-2 sm:pt-3 border-t border-[#e6dfd3] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <span class="text-base font-semibold text-[#0f0e0d]">₹1,199</span>
-              <span class="text-xs text-[#70695e] line-through ml-1.5">₹1,999</span>
+              <span class="text-sm sm:text-base font-semibold text-[#0f0e0d]">₹1,199</span>
+              <span class="text-[10px] text-[#70695e] line-through ml-1">₹1,999</span>
             </div>
-            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+Dubai+Gold+100ML+(Rs+1199)&type=phone_number&app_absent=0" target="_blank" class="px-3.5 py-2 bg-[#0f0e0d] text-white text-[11px] tracking-[0.15em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center gap-1.5">
+            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+Dubai+Gold+100ML+(Rs+1199)&type=phone_number&app_absent=0" target="_blank" class="w-full sm:w-auto px-2.5 sm:px-3.5 py-1.5 sm:py-2 bg-[#0f0e0d] text-white text-[10px] sm:text-[11px] tracking-[0.1em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center justify-center gap-1 rounded">
               <i class="ri-whatsapp-line text-sm text-[#25D366]"></i> Order
             </a>
           </div>
         </div>
 
         <!-- Product 7: Royal Oud (Pure Attar) -->
-        <div class="product-card group bg-white border border-[#e6dfd3] p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300" data-cat="atar">
+        <div class="product-card group bg-white border border-[#e6dfd3] p-3 sm:p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300 rounded-lg" data-cat="atar">
           <div>
-            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-4 p-4 flex items-center justify-center overflow-hidden">
-              <span class="absolute top-2 left-2 text-[10px] tracking-[0.15em] uppercase font-semibold bg-[#b8860b] text-white px-2 py-1">
-                Aged Dehn Al Oud
+            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-2.5 sm:mb-4 p-2 sm:p-4 flex items-center justify-center overflow-hidden rounded">
+              <span class="absolute top-1.5 left-1.5 text-[9px] tracking-[0.12em] uppercase font-semibold bg-[#b8860b] text-white px-1.5 py-0.5 rounded">
+                Aged Oud
               </span>
               <img src="https://www.yashelfragrance.com/assets/Royal%20OUD%20Yashel%20fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Royal Oud Yashel Fragrance" class="max-h-full object-contain" loading="lazy" />
             </div>
-            <span class="text-[10px] tracking-[0.18em] uppercase text-[#70695e] font-medium">Concentrated Attar · 12 ML</span>
-            <h3 class="font-serif text-xl font-medium text-[#0f0e0d] mt-1 mb-1">Royal OUD Al-Arabi</h3>
-            <p class="text-xs text-[#70695e] font-light mb-3">Matured Cambodian Agarwood, Frankincense, Birch Bark.</p>
-            <div class="flex items-center space-x-1 text-[#b8860b] text-xs mb-3">
+            <span class="text-[9px] sm:text-[10px] tracking-[0.14em] uppercase text-[#70695e] font-medium block">12 ML Pure Oil</span>
+            <h3 class="font-serif text-sm sm:text-lg font-medium text-[#0f0e0d] mt-0.5 mb-1 leading-snug">Royal OUD Al-Arabi</h3>
+            <p class="text-[11px] text-[#70695e] font-light mb-2 line-clamp-1 sm:line-clamp-2">Cambodian Agarwood, Frankincense.</p>
+            <div class="flex items-center space-x-1 text-[#b8860b] text-[10px] sm:text-xs mb-2">
               <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
-              <span class="text-[#70695e] text-[11px] ml-1.5">(5.0/5)</span>
+              <span class="text-[#70695e] ml-1">(5.0)</span>
             </div>
           </div>
-          <div class="pt-4 border-t border-[#e6dfd3] flex items-center justify-between">
+          <div class="pt-2 sm:pt-3 border-t border-[#e6dfd3] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <span class="text-base font-semibold text-[#0f0e0d]">₹799</span>
-              <span class="text-xs text-[#70695e] line-through ml-1.5">₹1,499</span>
+              <span class="text-sm sm:text-base font-semibold text-[#0f0e0d]">₹799</span>
+              <span class="text-[10px] text-[#70695e] line-through ml-1">₹1,499</span>
             </div>
-            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+Royal+Oud+Attar+12ML+(Rs+799)&type=phone_number&app_absent=0" target="_blank" class="px-3.5 py-2 bg-[#0f0e0d] text-white text-[11px] tracking-[0.15em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center gap-1.5">
+            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+Royal+Oud+Attar+12ML+(Rs+799)&type=phone_number&app_absent=0" target="_blank" class="w-full sm:w-auto px-2.5 sm:px-3.5 py-1.5 sm:py-2 bg-[#0f0e0d] text-white text-[10px] sm:text-[11px] tracking-[0.1em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center justify-center gap-1 rounded">
               <i class="ri-whatsapp-line text-sm text-[#25D366]"></i> Order
             </a>
           </div>
         </div>
 
         <!-- Product 8: Luxury Ambience Mist -->
-        <div class="product-card group bg-white border border-[#e6dfd3] p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300" data-cat="room">
+        <div class="product-card group bg-white border border-[#e6dfd3] p-3 sm:p-5 flex flex-col justify-between hover:border-[#b8860b] hover:shadow-lg transition-all duration-300 rounded-lg" data-cat="room">
           <div>
-            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-4 p-4 flex items-center justify-center overflow-hidden">
+            <div class="relative product-img-wrap aspect-[3/4] bg-[#faf8f5] mb-2.5 sm:mb-4 p-2 sm:p-4 flex items-center justify-center overflow-hidden rounded">
               <img src="https://www.yashelfragrance.com/assets/DARK%20NIGHT%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Car Perfume and Ambience" class="max-h-full object-contain" loading="lazy" />
             </div>
-            <span class="text-[10px] tracking-[0.18em] uppercase text-[#70695e] font-medium">Ambience Collection · 200 ML</span>
-            <h3 class="font-serif text-xl font-medium text-[#0f0e0d] mt-1 mb-1">Dark Night Ambient Mist</h3>
-            <p class="text-xs text-[#70695e] font-light mb-3">Smoked Leather, Cardamom, Sandalwood, Night Amber.</p>
-            <div class="flex items-center space-x-1 text-[#b8860b] text-xs mb-3">
+            <span class="text-[9px] sm:text-[10px] tracking-[0.14em] uppercase text-[#70695e] font-medium block">200 ML Ambience</span>
+            <h3 class="font-serif text-sm sm:text-lg font-medium text-[#0f0e0d] mt-0.5 mb-1 leading-snug">Dark Night Ambient Mist</h3>
+            <p class="text-[11px] text-[#70695e] font-light mb-2 line-clamp-1 sm:line-clamp-2">Smoked Leather, Cardamom, Sandalwood.</p>
+            <div class="flex items-center space-x-1 text-[#b8860b] text-[10px] sm:text-xs mb-2">
               <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-half-fill"></i>
-              <span class="text-[#70695e] text-[11px] ml-1.5">(4.8/5)</span>
+              <span class="text-[#70695e] ml-1">(4.8)</span>
             </div>
           </div>
-          <div class="pt-4 border-t border-[#e6dfd3] flex items-center justify-between">
+          <div class="pt-2 sm:pt-3 border-t border-[#e6dfd3] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <span class="text-base font-semibold text-[#0f0e0d]">₹499</span>
-              <span class="text-xs text-[#70695e] line-through ml-1.5">₹899</span>
+              <span class="text-sm sm:text-base font-semibold text-[#0f0e0d]">₹499</span>
+              <span class="text-[10px] text-[#70695e] line-through ml-1">₹899</span>
             </div>
-            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+Dark+Night+Mist+(Rs+499)&type=phone_number&app_absent=0" target="_blank" class="px-3.5 py-2 bg-[#0f0e0d] text-white text-[11px] tracking-[0.15em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center gap-1.5">
+            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+Dark+Night+Mist+(Rs+499)&type=phone_number&app_absent=0" target="_blank" class="w-full sm:w-auto px-2.5 sm:px-3.5 py-1.5 sm:py-2 bg-[#0f0e0d] text-white text-[10px] sm:text-[11px] tracking-[0.1em] uppercase font-medium hover:bg-[#b8860b] transition-colors flex items-center justify-center gap-1 rounded">
               <i class="ri-whatsapp-line text-sm text-[#25D366]"></i> Order
             </a>
           </div>
@@ -943,73 +970,73 @@ void main() {
 
 
   <!-- ================= SECTION 6: OLFACTORY ARCHITECTURE (PYRAMID) ================= -->
-  <section class="py-20 bg-white text-[#1a1917] border-t border-[#e6dfd3]">
+  <section class="py-12 sm:py-20 bg-white text-[#1a1917] border-t border-[#e6dfd3]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         
         <div class="lg:col-span-5">
           <span class="text-xs font-semibold tracking-[0.25em] text-[#b8860b] uppercase">Artisanal Formulation</span>
-          <h2 class="font-serif text-3xl sm:text-4xl text-[#0f0e0d] font-normal mt-2 mb-6">
-            The Olfactory Pyramid: 24-Hour Enduring Projection
+          <h2 class="font-serif text-2xl sm:text-4xl text-[#0f0e0d] font-normal mt-1 mb-4 sm:mb-6">
+            The Olfactory Pyramid: 24-Hour Sillage
           </h2>
-          <p class="text-sm text-[#70695e] font-light leading-relaxed mb-6">
-            At Yashel Fragrance, every formulation follows a precise architectural ratio. We do not dilute with excess alcohol or artificial dispersants. The fragrance unfolds systematically across your skin over the span of a day.
+          <p class="text-xs sm:text-sm text-[#70695e] font-light leading-relaxed mb-6">
+            Every Yashel formulation follows a calculated ratio. Without excess alcohol dilution, the fragrance evolves systematically across your skin over the day.
           </p>
-          <div class="space-y-4">
-            <div class="flex items-start gap-4 p-4 bg-[#faf8f5] border-l-2 border-[#b8860b]">
-              <div class="text-[#b8860b] text-xl mt-0.5"><i class="ri-time-line"></i></div>
+          <div class="space-y-3">
+            <div class="flex items-start gap-3 p-3 sm:p-4 bg-[#faf8f5] border-l-2 border-[#b8860b] rounded-r">
+              <div class="text-[#b8860b] text-lg mt-0.5"><i class="ri-time-line"></i></div>
               <div>
-                <h4 class="text-sm font-semibold text-[#0f0e0d] uppercase tracking-wide">12 to 24 Hour Longevity</h4>
-                <p class="text-xs text-[#70695e] mt-1 font-light">Engineered to outlast heat and movement, maintaining pure sillage from dawn till dusk.</p>
+                <h4 class="text-xs sm:text-sm font-semibold text-[#0f0e0d] uppercase tracking-wide">12 to 24 Hour Longevity</h4>
+                <p class="text-[11px] sm:text-xs text-[#70695e] mt-0.5 font-light">Maintains presence in tropical heat without evaporating prematurely.</p>
               </div>
             </div>
-            <div class="flex items-start gap-4 p-4 bg-[#faf8f5] border-l-2 border-[#0f0e0d]">
-              <div class="text-[#0f0e0d] text-xl mt-0.5"><i class="ri-leaf-line"></i></div>
+            <div class="flex items-start gap-3 p-3 sm:p-4 bg-[#faf8f5] border-l-2 border-[#0f0e0d] rounded-r">
+              <div class="text-[#0f0e0d] text-lg mt-0.5"><i class="ri-leaf-line"></i></div>
               <div>
-                <h4 class="text-sm font-semibold text-[#0f0e0d] uppercase tracking-wide">Certified IFRA Skin Safety</h4>
-                <p class="text-xs text-[#70695e] mt-1 font-light">Gentle on pulse points, free from harsh petrochemical stabilizers and allergens.</p>
+                <h4 class="text-xs sm:text-sm font-semibold text-[#0f0e0d] uppercase tracking-wide">Certified IFRA Skin Safety</h4>
+                <p class="text-[11px] sm:text-xs text-[#70695e] mt-0.5 font-light">Formulated for sensitive skin, free from harsh petrochemical stabilizers.</p>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Visual Pyramid Structure -->
-        <div class="lg:col-span-7 space-y-4">
+        <div class="lg:col-span-7 space-y-3 sm:space-y-4">
           
           <!-- Top Notes -->
-          <div class="border border-[#e6dfd3] bg-[#faf8f5] p-6 hover:border-[#b8860b] transition-colors">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[11px] tracking-[0.2em] uppercase font-semibold text-[#b8860b]">01. The Opening · 0 – 30 Mins</span>
-              <span class="text-xs text-[#70695e] font-medium">Head Notes</span>
+          <div class="border border-[#e6dfd3] bg-[#faf8f5] p-4 sm:p-6 rounded-lg hover:border-[#b8860b] transition-colors">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[10px] sm:text-[11px] tracking-[0.18em] uppercase font-semibold text-[#b8860b]">01. The Opening · 0 – 30 Mins</span>
+              <span class="text-xs text-[#70695e] font-medium">Head</span>
             </div>
-            <h3 class="font-serif text-xl font-medium text-[#0f0e0d] mb-1">Crisp Citrus, Oceanic Mists & Peppermint</h3>
-            <p class="text-xs text-[#70695e] font-light leading-relaxed">
-              Italian Bergamot, Sun-drenched Lemon, Sea Minerals, Pink Peppercorn, and Fresh Botanical Leaves that greet your senses immediately.
+            <h3 class="font-serif text-base sm:text-xl font-medium text-[#0f0e0d] mb-1">Crisp Citrus, Oceanic Mists & Peppermint</h3>
+            <p class="text-[11px] sm:text-xs text-[#70695e] font-light leading-relaxed">
+              Italian Bergamot, Sun-drenched Lemon, Sea Minerals, Pink Peppercorn, and Fresh Botanical Leaves.
             </p>
           </div>
 
           <!-- Heart Notes -->
-          <div class="border border-[#e6dfd3] bg-[#faf8f5] p-6 hover:border-[#b8860b] transition-colors">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[11px] tracking-[0.2em] uppercase font-semibold text-[#b8860b]">02. The Core · 30 Mins – 6 Hours</span>
-              <span class="text-xs text-[#70695e] font-medium">Heart Notes</span>
+          <div class="border border-[#e6dfd3] bg-[#faf8f5] p-4 sm:p-6 rounded-lg hover:border-[#b8860b] transition-colors">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[10px] sm:text-[11px] tracking-[0.18em] uppercase font-semibold text-[#b8860b]">02. The Core · 30 Mins – 6 Hours</span>
+              <span class="text-xs text-[#70695e] font-medium">Heart</span>
             </div>
-            <h3 class="font-serif text-xl font-medium text-[#0f0e0d] mb-1">Damask Rose, White Jasmine & Kashmiri Saffron</h3>
-            <p class="text-xs text-[#70695e] font-light leading-relaxed">
-              Rich floral and spicy accords extracted using Kannauj hydro-distillation, imparting depth, warmth, and unmistakable distinction.
+            <h3 class="font-serif text-base sm:text-xl font-medium text-[#0f0e0d] mb-1">Damask Rose, White Jasmine & Kashmiri Saffron</h3>
+            <p class="text-[11px] sm:text-xs text-[#70695e] font-light leading-relaxed">
+              Floral and spicy accords extracted using Kannauj hydro-distillation, adding warm depth.
             </p>
           </div>
 
           <!-- Base Notes -->
-          <div class="border border-[#e6dfd3] bg-[#faf8f5] p-6 hover:border-[#b8860b] transition-colors">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[11px] tracking-[0.2em] uppercase font-semibold text-[#b8860b]">03. The Resonance · 6 – 24+ Hours</span>
-              <span class="text-xs text-[#70695e] font-medium">Base Notes</span>
+          <div class="border border-[#e6dfd3] bg-[#faf8f5] p-4 sm:p-6 rounded-lg hover:border-[#b8860b] transition-colors">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[10px] sm:text-[11px] tracking-[0.18em] uppercase font-semibold text-[#b8860b]">03. The Resonance · 6 – 24+ Hours</span>
+              <span class="text-xs text-[#70695e] font-medium">Base</span>
             </div>
-            <h3 class="font-serif text-xl font-medium text-[#0f0e0d] mb-1">Cambodian Agarwood (Oud), Mysore Sandalwood & Amber</h3>
-            <p class="text-xs text-[#70695e] font-light leading-relaxed">
-              Heavy, precious resinous fixatives that bind intimately to fabric and skin, lingering for days with royal nobility.
+            <h3 class="font-serif text-base sm:text-xl font-medium text-[#0f0e0d] mb-1">Cambodian Agarwood (Oud), Mysore Sandalwood & Amber</h3>
+            <p class="text-[11px] sm:text-xs text-[#70695e] font-light leading-relaxed">
+              Dense resinous fixatives that anchor intimately to skin and fabric for days.
             </p>
           </div>
 
@@ -1022,51 +1049,52 @@ void main() {
 
 
   <!-- ================= SECTION 7: FOUNDERS HERITAGE ================= -->
-  <section id="story" class="py-20 bg-[#faf8f5] text-[#1a1917] border-t border-[#e6dfd3]">
+  <section id="story" class="py-12 sm:py-20 bg-[#faf8f5] text-[#1a1917] border-t border-[#e6dfd3]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
         
         <!-- Story Image Frame -->
         <div class="relative">
-          <div class="border border-[#e6dfd3] p-3 bg-white shadow-sm">
-            <img src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=1200&auto=format&fit=crop" alt="Artisanal perfume bottles distillation" class="w-full h-auto object-cover" />
+          <div class="border border-[#e6dfd3] p-2.5 sm:p-3 bg-white shadow-sm rounded-lg overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=1200&auto=format&fit=crop" alt="Artisanal perfume bottles distillation" class="w-full h-auto object-cover rounded" />
           </div>
-          <div class="absolute -bottom-6 -right-6 hidden sm:block bg-[#0f0e0d] text-white p-6 max-w-xs border border-[#2c2720] shadow-xl">
-            <p class="font-serif text-lg italic text-[#d4af37]">"A fragrance is not an accessory — it is the invisible royal signature you leave behind."</p>
-            <p class="text-[10px] tracking-[0.2em] uppercase text-[#a69e92] mt-2 font-medium">Ankit Goyal & Ishani Pandit</p>
+          <!-- Quote Box: Neatly positioned on mobile & desktop -->
+          <div class="mt-3 sm:mt-0 sm:absolute sm:-bottom-6 sm:-right-6 bg-[#090d13] text-white p-4 sm:p-6 max-w-sm border border-white/10 shadow-xl rounded-lg">
+            <p class="font-serif text-sm sm:text-lg italic text-[#d4af37]">"A fragrance is not an accessory — it is the invisible royal signature you leave behind."</p>
+            <p class="text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-slate-400 mt-2 font-medium">Ankit Goyal & Ishani Pandit</p>
           </div>
         </div>
 
         <!-- Founders Text -->
-        <div>
+        <div class="mt-4 lg:mt-0">
           <span class="text-xs font-semibold tracking-[0.25em] text-[#b8860b] uppercase">Artisanal Atelier</span>
-          <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#0f0e0d] font-normal mt-2 mb-6">
+          <h2 class="font-serif text-2xl sm:text-4xl lg:text-5xl text-[#0f0e0d] font-normal mt-1 mb-4 sm:mb-6">
             The House of Yashel: Craftsmanship in Greater Noida
           </h2>
-          <div class="w-12 h-[1px] bg-[#b8860b] mb-6"></div>
+          <div class="w-12 h-[1px] bg-[#b8860b] mb-4 sm:mb-6"></div>
           
-          <p class="text-sm text-[#70695e] font-light leading-relaxed mb-4">
-            Founded in Greater Noida by Ankit Goyal and Ishani Pandit, <strong>Yashel Fragrance</strong> was established with a singular conviction: luxury perfumery must be authentic, highly concentrated, and devoid of synthetic commercial dilution.
+          <p class="text-xs sm:text-sm text-[#70695e] font-light leading-relaxed mb-3">
+            Founded in Greater Noida by Ankit Goyal and Ishani Pandit, <strong>Yashel Fragrance</strong> was built on a direct premise: fine fragrance should be highly concentrated, long-lasting, and skin-safe without commercial shortcuts.
           </p>
           
-          <p class="text-sm text-[#70695e] font-light leading-relaxed mb-6">
-            By merging the ancient copper hydro-distillation traditions of Kannauj with contemporary French perfume formulation techniques, Yashel produces long-lasting, skin-safe blends that evoke confidence, royalty, and timeless grace.
+          <p class="text-xs sm:text-sm text-[#70695e] font-light leading-relaxed mb-6">
+            Combining traditional Kannauj copper hydro-distillation with modern perfume chemistry, Yashel crafts pure non-alcoholic attars and extraits formulated for enduring presence.
           </p>
 
-          <div class="grid grid-cols-2 gap-6 pt-4 border-t border-[#e6dfd3]">
+          <div class="grid grid-cols-2 gap-4 pt-4 border-t border-[#e6dfd3]">
             <div>
-              <span class="block font-serif text-3xl text-[#0f0e0d] font-normal">100%</span>
-              <span class="text-xs text-[#70695e] font-medium uppercase tracking-wide">Pure Concentrated Oils</span>
+              <span class="block font-serif text-2xl sm:text-3xl text-[#0f0e0d] font-normal">100%</span>
+              <span class="text-[10px] sm:text-xs text-[#70695e] font-medium uppercase tracking-wide">Pure Concentrated Oils</span>
             </div>
             <div>
-              <span class="block font-serif text-3xl text-[#0f0e0d] font-normal">4.9 ★</span>
-              <span class="text-xs text-[#70695e] font-medium uppercase tracking-wide">Customer Satisfaction</span>
+              <span class="block font-serif text-2xl sm:text-3xl text-[#0f0e0d] font-normal">4.9 ★</span>
+              <span class="text-[10px] sm:text-xs text-[#70695e] font-medium uppercase tracking-wide">Customer Satisfaction</span>
             </div>
           </div>
 
-          <div class="mt-8">
-            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel,+I+want+to+know+more+about+your+fragrance+story" target="_blank" class="inline-flex items-center px-6 py-3.5 bg-[#0f0e0d] text-white text-xs font-semibold tracking-[0.2em] uppercase hover:bg-[#b8860b] transition-colors gap-2">
+          <div class="mt-6">
+            <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel,+I+want+to+know+more+about+your+fragrance+story" target="_blank" class="inline-flex items-center px-5 sm:px-6 py-3 bg-[#0f0e0d] text-white text-xs font-semibold tracking-[0.16em] uppercase hover:bg-[#b8860b] transition-colors gap-2 rounded">
               <i class="ri-whatsapp-line text-sm text-[#25D366]"></i> Connect With Founders
             </a>
           </div>
@@ -1078,65 +1106,65 @@ void main() {
   </section>
 
 
-  <!-- ================= SECTION 8: CLIENT WORDS ================= -->
-  <section class="py-20 bg-white text-[#1a1917] border-t border-[#e6dfd3]">
+  <!-- ================= SECTION 8: CLIENT TESTIMONIALS ================= -->
+  <section class="py-12 sm:py-20 bg-white text-[#1a1917] border-t border-[#e6dfd3]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="text-center max-w-2xl mx-auto mb-16">
+      <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-14">
         <span class="text-xs font-semibold tracking-[0.25em] text-[#b8860b] uppercase">Verified Client Words</span>
-        <h2 class="font-serif text-3xl sm:text-4xl text-[#0f0e0d] font-normal mt-2 mb-4">
+        <h2 class="font-serif text-2xl sm:text-4xl text-[#0f0e0d] font-normal mt-1 mb-2">
           Adored by Discerning Patrons
         </h2>
         <div class="w-12 h-[1px] bg-[#b8860b] mx-auto"></div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8">
         
-        <div class="p-8 border border-[#e6dfd3] bg-[#faf8f5] hover:border-[#b8860b] transition-colors">
-          <div class="flex text-[#b8860b] text-sm mb-4">
+        <div class="p-5 sm:p-8 border border-[#e6dfd3] bg-[#faf8f5] hover:border-[#b8860b] transition-colors rounded-lg">
+          <div class="flex text-[#b8860b] text-sm mb-3">
             <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
           </div>
-          <p class="font-serif text-lg italic text-[#1a1917] mb-4">
-            "I ordered the Aventus Imperial and White Oud Attar. The projection is unbelievable. Even after 14 hours at a Delhi wedding, the scent was noticeably radiant on my sherwani."
+          <p class="font-serif text-base sm:text-lg italic text-[#1a1917] mb-3 leading-relaxed">
+            "I ordered Aventus Imperial and White Oud Attar. The projection is unbelievable. Even after 14 hours at a wedding, the scent was radiant on my sherwani."
           </p>
-          <div class="pt-4 border-t border-[#e6dfd3] flex items-center justify-between">
+          <div class="pt-3 border-t border-[#e6dfd3] flex items-center justify-between">
             <div>
               <p class="text-xs font-semibold uppercase tracking-wider text-[#0f0e0d]">Rohan Sharma</p>
-              <p class="text-[11px] text-[#70695e]">Greater Noida · Verified Buyer</p>
+              <p class="text-[10px] text-[#70695e]">Greater Noida · Verified Buyer</p>
             </div>
-            <i class="ri-checkbox-circle-fill text-[#25D366] text-lg"></i>
+            <i class="ri-checkbox-circle-fill text-[#25D366] text-base"></i>
           </div>
         </div>
 
-        <div class="p-8 border border-[#e6dfd3] bg-[#faf8f5] hover:border-[#b8860b] transition-colors">
-          <div class="flex text-[#b8860b] text-sm mb-4">
+        <div class="p-5 sm:p-8 border border-[#e6dfd3] bg-[#faf8f5] hover:border-[#b8860b] transition-colors rounded-lg">
+          <div class="flex text-[#b8860b] text-sm mb-3">
             <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
           </div>
-          <p class="font-serif text-lg italic text-[#1a1917] mb-4">
-            "The non-alcoholic Rose Musk attar is divine. It is gentle on my sensitive skin, has zero chemical smell, and smells deeply luxurious. Truly comparable to Parisian luxury houses."
+          <p class="font-serif text-base sm:text-lg italic text-[#1a1917] mb-3 leading-relaxed">
+            "The non-alcoholic Rose Musk attar is gentle on sensitive skin, has zero harsh chemical smell, and smells deeply luxurious."
           </p>
-          <div class="pt-4 border-t border-[#e6dfd3] flex items-center justify-between">
+          <div class="pt-3 border-t border-[#e6dfd3] flex items-center justify-between">
             <div>
               <p class="text-xs font-semibold uppercase tracking-wider text-[#0f0e0d]">Meenakshi Iyer</p>
-              <p class="text-[11px] text-[#70695e]">Noida Sector 62 · Verified Buyer</p>
+              <p class="text-[10px] text-[#70695e]">Noida Sector 62 · Verified Buyer</p>
             </div>
-            <i class="ri-checkbox-circle-fill text-[#25D366] text-lg"></i>
+            <i class="ri-checkbox-circle-fill text-[#25D366] text-base"></i>
           </div>
         </div>
 
-        <div class="p-8 border border-[#e6dfd3] bg-[#faf8f5] hover:border-[#b8860b] transition-colors">
-          <div class="flex text-[#b8860b] text-sm mb-4">
+        <div class="p-5 sm:p-8 border border-[#e6dfd3] bg-[#faf8f5] hover:border-[#b8860b] transition-colors rounded-lg">
+          <div class="flex text-[#b8860b] text-sm mb-3">
             <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
           </div>
-          <p class="font-serif text-lg italic text-[#1a1917] mb-4">
-            "Their WhatsApp ordering concierge is fast and polite. Ordered 20 custom hampers for Diwali corporate gifting. Beautiful presentation and exquisite scents. Everyone loved it."
+          <p class="font-serif text-base sm:text-lg italic text-[#1a1917] mb-3 leading-relaxed">
+            "Ordered 20 custom hampers for corporate gifting. Beautiful presentation and exquisite scents. Ordering via WhatsApp was quick and effortless."
           </p>
-          <div class="pt-4 border-t border-[#e6dfd3] flex items-center justify-between">
+          <div class="pt-3 border-t border-[#e6dfd3] flex items-center justify-between">
             <div>
               <p class="text-xs font-semibold uppercase tracking-wider text-[#0f0e0d]">Vikramaditya Rao</p>
-              <p class="text-[11px] text-[#70695e]">Gurugram · Corporate Client</p>
+              <p class="text-[10px] text-[#70695e]">Gurugram · Corporate Client</p>
             </div>
-            <i class="ri-checkbox-circle-fill text-[#25D366] text-lg"></i>
+            <i class="ri-checkbox-circle-fill text-[#25D366] text-base"></i>
           </div>
         </div>
 
@@ -1146,55 +1174,55 @@ void main() {
   </section>
 
 
-  <!-- ================= SECTION 9: ATELIER VISITATION & CONCIERGE ================= -->
-  <section id="contact" class="py-20 bg-[#faf8f5] text-[#1a1917] border-t border-[#e6dfd3]">
+  <!-- ================= SECTION 9: CONCIERGE & VISITATION ================= -->
+  <section id="contact" class="py-12 sm:py-20 bg-[#faf8f5] text-[#1a1917] border-t border-[#e6dfd3]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="bg-white border border-[#e6dfd3] p-8 sm:p-12 lg:p-16 shadow-sm">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="bg-white border border-[#e6dfd3] p-5 sm:p-10 lg:p-14 shadow-sm rounded-xl">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           
           <div>
             <span class="text-xs font-semibold tracking-[0.25em] text-[#b8860b] uppercase">Concierge & Boutique</span>
-            <h2 class="font-serif text-3xl sm:text-4xl text-[#0f0e0d] font-normal mt-2 mb-4">
-              Visit The Greater Noida Studio or Order Online
+            <h2 class="font-serif text-2xl sm:text-4xl text-[#0f0e0d] font-normal mt-1 mb-3">
+              Visit The Studio or Order Online
             </h2>
-            <p class="text-sm text-[#70695e] font-light leading-relaxed mb-6">
-              Experience the notes in person or receive tailored scent advice for everyday wear, gifting, or bridal trousseaus.
+            <p class="text-xs sm:text-sm text-[#70695e] font-light leading-relaxed mb-5">
+              Experience the scents in person at our Greater Noida studio or message our fragrance concierge for personalized advice.
             </p>
 
-            <div class="space-y-4 text-xs tracking-wider uppercase font-medium text-[#1a1917]">
-              <div class="flex items-center gap-3">
-                <i class="ri-map-pin-line text-lg text-[#b8860b]"></i>
-                <span>Atelier Location: Greater Noida, Uttar Pradesh, India</span>
+            <div class="space-y-3 text-xs tracking-wide uppercase font-medium text-[#1a1917]">
+              <div class="flex items-center gap-2.5">
+                <i class="ri-map-pin-line text-base text-[#b8860b]"></i>
+                <span>Atelier Location: Greater Noida, UP, India</span>
               </div>
-              <div class="flex items-center gap-3">
-                <i class="ri-time-line text-lg text-[#b8860b]"></i>
-                <span>Studio Hours: Mon – Sun, 10:00 AM – 9:00 PM IST</span>
+              <div class="flex items-center gap-2.5">
+                <i class="ri-time-line text-base text-[#b8860b]"></i>
+                <span>Hours: Mon – Sun, 10:00 AM – 9:00 PM IST</span>
               </div>
-              <div class="flex items-center gap-3">
-                <i class="ri-phone-line text-lg text-[#b8860b]"></i>
+              <div class="flex items-center gap-2.5">
+                <i class="ri-phone-line text-base text-[#b8860b]"></i>
                 <span>Direct Helpline: +91 95602 91377</span>
               </div>
             </div>
 
-            <div class="mt-8 flex flex-wrap gap-4">
-              <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+or+inquire+about+your+perfumes" target="_blank" class="px-8 py-3.5 bg-[#25D366] text-white text-xs font-semibold tracking-[0.2em] uppercase hover:bg-[#128c7e] transition-colors flex items-center gap-2">
+            <div class="mt-6 flex flex-col sm:flex-row gap-3">
+              <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+order+or+inquire+about+your+perfumes" target="_blank" class="w-full sm:w-auto px-6 py-3.5 bg-[#25D366] text-white text-xs font-semibold tracking-[0.16em] uppercase hover:bg-[#128c7e] transition-colors flex items-center justify-center gap-2 rounded-lg">
                 <i class="ri-whatsapp-line text-base"></i> Chat on WhatsApp
               </a>
-              <a href="tel:+919560291377" class="px-6 py-3.5 border border-[#0f0e0d] text-[#0f0e0d] text-xs font-semibold tracking-[0.2em] uppercase hover:bg-[#0f0e0d] hover:text-white transition-colors">
-                Call Concierge
+              <a href="tel:+919560291377" class="w-full sm:w-auto px-6 py-3.5 border border-[#0f0e0d] text-[#0f0e0d] text-xs font-semibold tracking-[0.16em] uppercase hover:bg-[#0f0e0d] hover:text-white transition-colors flex items-center justify-center rounded-lg">
+                Call Studio
               </a>
             </div>
           </div>
 
-          <div class="border border-[#e6dfd3] bg-[#faf8f5] p-6 text-center">
-            <h3 class="font-serif text-2xl text-[#0f0e0d] mb-2">Request Bespoke Scent Samples</h3>
-            <p class="text-xs text-[#70695e] font-light mb-6">
-              Not sure which accord complements your aura? Message us your preferred scent profiles (woody, floral, fresh, oriental) and our nose will curate a personalized discovery box for you.
+          <div class="border border-[#e6dfd3] bg-[#faf8f5] p-5 sm:p-6 text-center rounded-lg">
+            <h3 class="font-serif text-lg sm:text-2xl text-[#0f0e0d] mb-1.5">Request Scent Discovery Recommendations</h3>
+            <p class="text-xs text-[#70695e] font-light mb-4 leading-relaxed">
+              Uncertain which notes match your personal aura? Message us your preferred notes (woody, floral, aquatic, oud) for a custom recommendation.
             </p>
-            <div class="p-4 bg-white border border-[#e6dfd3] inline-block text-left text-xs text-[#1a1917] w-full max-w-sm">
-              <p class="font-medium text-[#b8860b] mb-1">WhatsApp Concierge Prompt:</p>
-              <p class="italic text-[#70695e]">"Hi Yashel, I love fresh woody notes and want to order recommendations under ₹1,500..."</p>
+            <div class="p-3 bg-white border border-[#e6dfd3] text-left text-xs text-[#1a1917] rounded">
+              <p class="font-medium text-[#b8860b] mb-0.5">Quick WhatsApp Prompt:</p>
+              <p class="italic text-[#70695e]">"Hi Yashel, I prefer fresh woody notes and want recommendations under ₹1,500..."</p>
             </div>
           </div>
 
@@ -1206,62 +1234,62 @@ void main() {
 
 
   <!-- ================= SECTION 10: CLEAN ROYAL FOOTER ================= -->
-  <footer class="bg-[#090d13] text-[#e8e4dc] border-t border-white/[0.06] pt-16 pb-12">
+  <footer class="bg-[#080c12] text-[#e8e4dc] border-t border-white/[0.06] pt-12 pb-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-white/[0.06]">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 pb-10 border-b border-white/[0.06]">
         
-        <!-- Col 1: Brand Info & High-Res Vector Logo -->
-        <div class="md:col-span-2">
-          <a href="#home" class="inline-block mb-4" title="Yashel Fragrance Home">
-            <img src="yashel-logo.svg" alt="Yashel Fragrance Official Royal Logo" class="h-16 sm:h-20 w-auto object-contain" />
+        <!-- Col 1: Brand Info -->
+        <div class="sm:col-span-2">
+          <a href="#home" class="inline-block mb-3" title="Yashel Fragrance Home">
+            <img src="yashel-logo.svg" alt="Yashel Fragrance Royal Logo" class="h-14 sm:h-16 w-auto object-contain" />
           </a>
-          <span class="text-[10px] tracking-[0.3em] uppercase text-[#d4af37] font-medium block mb-3">
+          <span class="text-[10px] tracking-[0.25em] uppercase text-[#d4af37] font-medium block mb-2">
             Haute Parfumerie · Greater Noida Flagship
           </span>
-          <p class="text-xs text-slate-400 font-light leading-relaxed max-w-md mb-6">
-            Handcrafted luxury fragrances, concentrated pure non-alcoholic attars, ambient room mists, and bespoke corporate hampers. Born in Greater Noida, celebrating the timeless olfactory heritage of India.
+          <p class="text-xs text-slate-400 font-light leading-relaxed max-w-sm mb-4">
+            Handcrafted luxury fragrances, concentrated pure non-alcoholic attars, ambient room mists, and bespoke corporate gift sets.
           </p>
-          <div class="flex items-center space-x-4 text-white text-lg">
-            <a href="https://www.yashelfragrance.com" target="_blank" class="w-9 h-9 border border-white/10 flex items-center justify-center hover:border-[#d4af37] hover:text-[#d4af37] transition-colors" title="Website"><i class="ri-global-line"></i></a>
-            <a href="https://api.whatsapp.com/send/?phone=919560291377" target="_blank" class="w-9 h-9 border border-white/10 flex items-center justify-center hover:border-[#25D366] hover:text-[#25D366] transition-colors" title="WhatsApp"><i class="ri-whatsapp-line"></i></a>
-            <a href="tel:+919560291377" class="w-9 h-9 border border-white/10 flex items-center justify-center hover:border-[#d4af37] hover:text-[#d4af37] transition-colors" title="Phone"><i class="ri-phone-line"></i></a>
+          <div class="flex items-center space-x-3 text-white text-base">
+            <a href="https://www.yashelfragrance.com" target="_blank" class="w-8 h-8 rounded border border-white/10 flex items-center justify-center hover:border-[#d4af37] hover:text-[#d4af37] transition-colors" title="Website"><i class="ri-global-line"></i></a>
+            <a href="https://api.whatsapp.com/send/?phone=919560291377" target="_blank" class="w-8 h-8 rounded border border-white/10 flex items-center justify-center hover:border-[#25D366] hover:text-[#25D366] transition-colors" title="WhatsApp"><i class="ri-whatsapp-line"></i></a>
+            <a href="tel:+919560291377" class="w-8 h-8 rounded border border-white/10 flex items-center justify-center hover:border-[#d4af37] hover:text-[#d4af37] transition-colors" title="Phone"><i class="ri-phone-line"></i></a>
           </div>
         </div>
 
         <!-- Col 2: Olfactory Categories -->
         <div>
-          <h4 class="text-xs font-semibold uppercase tracking-[0.2em] text-[#d4af37] mb-4">Categories</h4>
-          <ul class="space-y-2.5 text-xs text-slate-400 font-light">
+          <h4 class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d4af37] mb-3">Categories</h4>
+          <ul class="space-y-2 text-xs text-slate-400 font-light">
             <li><button onclick="filterCatalog('perfume')" class="hover:text-white transition-colors">Eau De Parfum (100ml)</button></li>
             <li><button onclick="filterCatalog('atar')" class="hover:text-white transition-colors">Pure Attars (12ml)</button></li>
             <li><button onclick="filterCatalog('room')" class="hover:text-white transition-colors">Car Diffusers</button></li>
-            <li><button onclick="filterCatalog('room')" class="hover:text-white transition-colors">Artisanal Room Mists</button></li>
-            <li><button onclick="filterCatalog('hamper')" class="hover:text-white transition-colors">Custom Gift Hampers</button></li>
+            <li><button onclick="filterCatalog('room')" class="hover:text-white transition-colors">Room Mists</button></li>
+            <li><button onclick="filterCatalog('hamper')" class="hover:text-white transition-colors">Gift Hampers</button></li>
           </ul>
         </div>
 
         <!-- Col 3: Direct Atelier Contact -->
         <div>
-          <h4 class="text-xs font-semibold uppercase tracking-[0.2em] text-[#d4af37] mb-4">Atelier & Orders</h4>
-          <ul class="space-y-2.5 text-xs text-slate-400 font-light">
+          <h4 class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d4af37] mb-3">Atelier & Orders</h4>
+          <ul class="space-y-1.5 text-xs text-slate-400 font-light">
             <li>WhatsApp: <a href="https://api.whatsapp.com/send/?phone=919560291377" target="_blank" class="text-white hover:text-[#25D366]">+91 95602 91377</a></li>
             <li>Phone: <a href="tel:+919560291377" class="text-white hover:text-[#d4af37]">+91 95602 91377</a></li>
             <li>Greater Noida, UP, India</li>
-            <li>Daily: 10:00 AM – 9:00 PM IST</li>
-            <li class="pt-2"><span class="text-[#25D366]">● Available Now for Consultation</span></li>
+            <li>10:00 AM – 9:00 PM IST</li>
+            <li class="pt-1"><span class="text-[#25D366]">● Available for Consultation</span></li>
           </ul>
         </div>
 
       </div>
 
       <!-- Bottom Disclaimer & Copyright -->
-      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 tracking-wider">
-        <p>© 2026 Yashel Fragrance. All Rights Reserved. Crafted for the Discerning.</p>
-        <div class="flex space-x-6 mt-4 sm:mt-0">
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-[10px] sm:text-[11px] text-slate-500 tracking-wide">
+        <p>© 2026 Yashel Fragrance. All Rights Reserved.</p>
+        <div class="flex space-x-4 mt-2 sm:mt-0">
           <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
           <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
-          <a href="#" class="hover:text-white transition-colors">Shipping & Returns</a>
+          <a href="#" class="hover:text-white transition-colors">Shipping</a>
         </div>
       </div>
 
@@ -1269,27 +1297,48 @@ void main() {
   </footer>
 
 
-  <!-- ================= FLOATING WHATSAPP BUTTON ================= -->
-  <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+know+more+about+your+perfumes" target="_blank" class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 hover:bg-[#128c7e] transition-all duration-300 flex items-center justify-center group" aria-label="Chat with fragrance concierge on WhatsApp">
-    <i class="ri-whatsapp-line text-2xl"></i>
-    <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs group-hover:ml-2 transition-all duration-500 text-xs font-semibold tracking-wider uppercase">
+  <!-- ================= FLOATING WHATSAPP BUTTON (Optimized for Mobile) ================= -->
+  <a href="https://api.whatsapp.com/send/?phone=919560291377&text=Hello+Yashel+Fragrance,+I+want+to+know+more+about+your+perfumes" target="_blank" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 bg-[#25D366] text-white p-3.5 sm:p-4 rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center group" aria-label="Chat with fragrance concierge on WhatsApp">
+    <i class="ri-whatsapp-line text-2xl sm:text-2xl"></i>
+    <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs group-hover:ml-2 transition-all duration-500 text-xs font-semibold tracking-wider uppercase hidden sm:inline-block">
       Order on WhatsApp
     </span>
   </a>
 
 
-  <!-- ================= SCRIPTS: 3D TILT, AMBIENCE, SLIDER, FILTERS ================= -->
+  <!-- ================= SCRIPTS: MOBILE DRAWER, TOUCH 3D TILT, SLIDER, FILTERS ================= -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // --- 3D Bottle Tilt Parallax ---
+      // --- Mobile Navigation Drawer Toggle ---
+      const openDrawerBtn = document.getElementById('open-drawer-btn');
+      const closeDrawerBtn = document.getElementById('close-drawer-btn');
+      const mobileDrawer = document.getElementById('mobile-drawer');
+
+      if (openDrawerBtn && mobileDrawer) {
+        openDrawerBtn.addEventListener('click', () => {
+          mobileDrawer.classList.remove('hidden');
+        });
+      }
+      if (closeDrawerBtn && mobileDrawer) {
+        closeDrawerBtn.addEventListener('click', () => {
+          mobileDrawer.classList.add('hidden');
+        });
+      }
+      if (mobileDrawer) {
+        mobileDrawer.addEventListener('click', (e) => {
+          if (e.target === mobileDrawer || e.target.tagName === 'A') {
+            mobileDrawer.classList.add('hidden');
+          }
+        });
+      }
+
+      // --- 3D Bottle Tilt with Touch & Mouse Support ---
       const container = document.getElementById('bottle-tilt-container');
       const cursorLight = document.getElementById('cursor-light');
       const soundToggle = document.getElementById('sound-toggle');
       let isSoundActive = true;
 
-      window.addEventListener('mousemove', (e) => {
-        const { clientX, clientY } = e;
-
+      function updateTilt(clientX, clientY) {
         if (cursorLight) {
           cursorLight.style.left = `${clientX}px`;
           cursorLight.style.top = `${clientY}px`;
@@ -1301,19 +1350,38 @@ void main() {
           const deltaX = (clientX - centerX) / centerX;
           const deltaY = (clientY - centerY) / centerY;
 
-          const rotateY = deltaX * 16;
-          const rotateX = -deltaY * 16;
+          const rotateY = deltaX * 14;
+          const rotateX = -deltaY * 14;
 
-          container.style.transform = `perspective(1100px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(24px)`;
+          container.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(18px)`;
         }
+      }
+
+      // Mouse move
+      window.addEventListener('mousemove', (e) => {
+        updateTilt(e.clientX, e.clientY);
       });
 
       window.addEventListener('mouseleave', () => {
         if (container) {
-          container.style.transform = `perspective(1100px) rotateX(0deg) rotateY(0deg) translateZ(0px)`;
+          container.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)`;
         }
       });
 
+      // Subtle touch drag tilt for Android / iOS
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches[0]) {
+          updateTilt(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', () => {
+        if (container) {
+          container.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)`;
+        }
+      });
+
+      // Sound Wave Visualizer Toggle
       if (soundToggle) {
         soundToggle.addEventListener('click', () => {
           isSoundActive = !isSoundActive;
