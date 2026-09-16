@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -22,25 +23,37 @@
     }
     html { scroll-behavior: smooth; }
     body { font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--text); background: var(--white); -webkit-font-smoothing: antialiased; }
+    body.no-scroll { overflow: hidden; }
     img { max-width: 100%; display: block; } a { color: inherit; text-decoration: none; }
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
     ul, ol { list-style: none; }
     .container { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--gutter); }
+
+    /* ANNOUNCEMENT BAR */
     .ann-bar { background: var(--black); color: var(--white); font-family: var(--font-head); font-size: 12px; font-weight: 500; letter-spacing: 0.08em; padding: 10px 0; overflow: hidden; }
     .ann-bar__track { display: flex; gap: 60px; white-space: nowrap; animation: marqueeScroll 35s linear infinite; }
     .ann-bar__track span { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; }
     .ann-bar__track span i { color: var(--accent); font-size: 11px; }
     @keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* HEADER */
     .site-header { position: sticky; top: 0; z-index: 150; background: var(--white); border-bottom: 1px solid #e5e5e5; transition: box-shadow 0.3s; }
     .header-inner { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 var(--gutter); height: 68px; max-width: var(--max-w); margin: 0 auto; }
     .nav-left { display: flex; gap: 28px; align-items: center; }
-    .nav-left a, .nav-right a { font-family: var(--font-head); font-size: 13px; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; color: var(--black); transition: color var(--transition); }
-    .nav-left a:hover, .nav-right a:hover { color: var(--accent); }
+    .nav-left a, .nav-right-links a { font-family: var(--font-head); font-size: 13px; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; color: var(--black); transition: color var(--transition); }
+    .nav-left a:hover, .nav-right-links a:hover { color: var(--accent); }
     .site-logo { display: flex; justify-content: center; align-items: center; }
     .site-logo img { height: 42px; width: auto; }
     .logo-fallback { font-family: var(--font-head); font-size: 24px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--black); display: none; }
-    .nav-right { display: flex; justify-content: flex-end; align-items: center; gap: 20px; }
+    .nav-right { display: flex; justify-content: flex-end; align-items: center; gap: 16px; }
+    .nav-right-links { display: flex; gap: 20px; align-items: center; }
+    .cart-btn { position: relative; background: none; border: none; padding: 6px; cursor: pointer; color: var(--black); font-size: 20px; transition: color var(--transition); }
+    .cart-btn:hover { color: var(--accent); }
+    .cart-badge { position: absolute; top: -2px; right: -4px; background: var(--accent); color: var(--white); font-family: var(--font-head); font-size: 10px; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; display: none; }
+    .cart-badge.show { display: flex; }
     .burger-btn { display: none; font-size: 22px; color: var(--black); background: none; border: none; padding: 4px; cursor: pointer; }
+
+    /* MOBILE DRAWER */
     .mobile-drawer { display: none; position: fixed; inset: 0; z-index: 500; }
     .mobile-drawer.open { display: flex; }
     .drawer-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
@@ -52,13 +65,115 @@
     .drawer-whatsapp { margin-top: auto; padding-top: 32px; }
     .whatsapp-cta-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: #25d366; color: white; font-family: var(--font-head); font-size: 14px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 14px 20px; border-radius: 2px; transition: background var(--transition); }
     .whatsapp-cta-btn:hover { background: #1da851; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-head); font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 14px 32px; border-radius: 0; transition: all var(--transition); cursor: pointer; white-space: nowrap; }
-    .btn-primary { background: var(--black); color: var(--white); border: 2px solid var(--black); }
+
+    /* BUTTONS */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-head); font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 14px 32px; border-radius: 0; transition: all var(--transition); cursor: pointer; white-space: nowrap; border: 2px solid transparent; }
+    .btn-primary { background: var(--black); color: var(--white); border-color: var(--black); }
     .btn-primary:hover { background: var(--accent); border-color: var(--accent); }
-    .btn-outline { background: transparent; color: var(--black); border: 2px solid var(--black); }
+    .btn-outline { background: transparent; color: var(--black); border-color: var(--black); }
     .btn-outline:hover { background: var(--black); color: var(--white); }
-    .btn-white { background: var(--white); color: var(--black); border: 2px solid var(--white); }
+    .btn-white { background: var(--white); color: var(--black); border-color: var(--white); }
     .btn-white:hover { background: transparent; color: var(--white); }
+    .btn-accent { background: var(--accent); color: var(--white); border-color: var(--accent); }
+    .btn-accent:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+
+    /* ===== CART SIDEBAR ===== */
+    .cart-sidebar { position: fixed; top: 0; right: -440px; width: 420px; max-width: 100vw; height: 100%; background: var(--white); z-index: 600; box-shadow: -4px 0 30px rgba(0,0,0,0.15); display: flex; flex-direction: column; transition: right 0.35s cubic-bezier(0.4,0,0.2,1); }
+    .cart-sidebar.open { right: 0; }
+    .cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 590; opacity: 0; pointer-events: none; transition: opacity 0.35s; }
+    .cart-backdrop.show { opacity: 1; pointer-events: all; }
+    .cart-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid #eee; flex-shrink: 0; }
+    .cart-header h2 { font-family: var(--font-head); font-size: 16px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .cart-close-btn { font-size: 22px; color: var(--black); background: none; border: none; cursor: pointer; padding: 4px; transition: color var(--transition); }
+    .cart-close-btn:hover { color: var(--accent); }
+    .cart-items { flex: 1; overflow-y: auto; padding: 20px 24px; }
+    .cart-empty { text-align: center; padding: 60px 20px; }
+    .cart-empty i { font-size: 48px; color: var(--mid-gray); margin-bottom: 16px; }
+    .cart-empty p { font-family: var(--font-head); font-size: 14px; color: var(--text-mid); margin-bottom: 20px; }
+    .cart-item { display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid #f0f0f0; }
+    .cart-item__img { width: 72px; height: 90px; object-fit: cover; background: var(--light-gray); flex-shrink: 0; }
+    .cart-item__body { flex: 1; }
+    .cart-item__name { font-family: var(--font-head); font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--black); margin-bottom: 3px; }
+    .cart-item__type { font-family: var(--font-body); font-size: 12px; color: var(--text-mid); margin-bottom: 8px; }
+    .cart-item__price { font-family: var(--font-head); font-size: 14px; font-weight: 700; color: var(--black); }
+    .cart-item__compare { font-family: var(--font-body); font-size: 12px; color: var(--text-mid); text-decoration: line-through; margin-left: 6px; }
+    .cart-item__controls { display: flex; align-items: center; gap: 0; margin-top: 10px; }
+    .qty-btn { width: 30px; height: 30px; border: 1px solid var(--mid-gray); background: var(--white); font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all var(--transition); color: var(--black); }
+    .qty-btn:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+    .qty-display { width: 38px; height: 30px; border-top: 1px solid var(--mid-gray); border-bottom: 1px solid var(--mid-gray); display: flex; align-items: center; justify-content: center; font-family: var(--font-head); font-size: 13px; font-weight: 600; }
+    .cart-item__remove { margin-left: auto; font-size: 14px; color: var(--text-mid); cursor: pointer; transition: color var(--transition); background: none; border: none; padding: 4px; }
+    .cart-item__remove:hover { color: #c0392b; }
+    .cart-footer { border-top: 1px solid #eee; padding: 20px 24px; flex-shrink: 0; background: var(--white); }
+    .cart-totals { margin-bottom: 16px; }
+    .cart-total-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-family: var(--font-body); font-size: 14px; color: var(--text-mid); }
+    .cart-total-row.grand { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--black); border-top: 2px solid var(--black); padding-top: 12px; margin-top: 6px; }
+    .cart-total-row .free-tag { font-family: var(--font-head); font-size: 11px; font-weight: 700; color: #108043; letter-spacing: 0.06em; }
+    .cart-checkout-btn { width: 100%; padding: 16px; font-size: 14px; }
+    .cart-continue { display: block; text-align: center; font-family: var(--font-head); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-mid); margin-top: 12px; cursor: pointer; transition: color var(--transition); }
+    .cart-continue:hover { color: var(--accent); }
+
+    /* ===== CHECKOUT MODAL ===== */
+    .checkout-modal { display: none; position: fixed; inset: 0; z-index: 700; align-items: center; justify-content: center; padding: var(--gutter); }
+    .checkout-modal.open { display: flex; }
+    .checkout-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.6); }
+    .checkout-box { position: relative; z-index: 1; background: var(--white); width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; }
+    .checkout-hdr { display: flex; align-items: center; justify-content: space-between; padding: 22px 28px; border-bottom: 1px solid #eee; position: sticky; top: 0; background: var(--white); z-index: 2; }
+    .checkout-hdr h2 { font-family: var(--font-head); font-size: 15px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .checkout-close { font-size: 22px; cursor: pointer; color: var(--black); background: none; border: none; }
+    .checkout-steps { display: flex; padding: 16px 28px; gap: 0; border-bottom: 1px solid #eee; background: var(--cream); }
+    .step-dot { display: flex; align-items: center; gap: 8px; font-family: var(--font-head); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-mid); }
+    .step-dot.active { color: var(--black); }
+    .step-dot.done { color: var(--accent); }
+    .step-num { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--mid-gray); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .step-dot.active .step-num { border-color: var(--black); background: var(--black); color: var(--white); }
+    .step-dot.done .step-num { border-color: var(--accent); background: var(--accent); color: var(--white); }
+    .step-sep { flex: 1; height: 1px; background: var(--mid-gray); margin: 0 8px; align-self: center; }
+    .checkout-body { padding: 28px; }
+    .checkout-step { display: none; }
+    .checkout-step.active { display: block; }
+    .chk-section-title { font-family: var(--font-head); font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--black); }
+    .form-row { margin-bottom: 16px; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+    .form-label { display: block; font-family: var(--font-head); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); margin-bottom: 6px; }
+    .form-label span { color: #c0392b; }
+    .form-input, .form-select, .form-textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--mid-gray); background: var(--white); font-family: var(--font-body); font-size: 14px; color: var(--text); outline: none; border-radius: 0; transition: border-color var(--transition); -webkit-appearance: none; appearance: none; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--black); }
+    .form-input.error, .form-select.error { border-color: #c0392b; }
+    .form-error { font-family: var(--font-body); font-size: 12px; color: #c0392b; margin-top: 4px; display: none; }
+    .form-error.show { display: block; }
+    /* Order Summary in checkout */
+    .chk-order-items { margin-bottom: 16px; }
+    .chk-order-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; align-items: center; }
+    .chk-order-item img { width: 50px; height: 62px; object-fit: cover; background: var(--light-gray); flex-shrink: 0; }
+    .chk-order-item__name { font-family: var(--font-head); font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--black); }
+    .chk-order-item__meta { font-family: var(--font-body); font-size: 12px; color: var(--text-mid); }
+    .chk-order-item__price { font-family: var(--font-head); font-size: 13px; font-weight: 700; color: var(--black); margin-left: auto; white-space: nowrap; }
+    .chk-totals { background: var(--cream); padding: 16px; }
+    .chk-total-row { display: flex; justify-content: space-between; font-family: var(--font-body); font-size: 14px; color: var(--text-mid); padding: 4px 0; }
+    .chk-total-row.grand { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--black); border-top: 2px solid var(--black); padding-top: 10px; margin-top: 6px; }
+    /* Payment options */
+    .payment-options { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+    .payment-option { border: 2px solid var(--mid-gray); padding: 16px 18px; cursor: pointer; display: flex; align-items: flex-start; gap: 14px; transition: border-color var(--transition); }
+    .payment-option:hover { border-color: var(--black); }
+    .payment-option.selected { border-color: var(--black); background: #f9f9f9; }
+    .payment-option input[type="radio"] { margin-top: 3px; accent-color: var(--black); flex-shrink: 0; }
+    .payment-option__label { font-family: var(--font-head); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--black); margin-bottom: 3px; }
+    .payment-option__sub { font-family: var(--font-body); font-size: 13px; color: var(--text-mid); }
+    .payment-option__icons { margin-left: auto; display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+    .payment-option__icons i { font-size: 22px; color: var(--text-mid); }
+    /* Checkout nav */
+    .chk-nav { display: flex; gap: 12px; margin-top: 24px; }
+    .chk-back { font-family: var(--font-head); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-mid); background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: color var(--transition); padding: 0; }
+    .chk-back:hover { color: var(--black); }
+    .chk-next { flex: 1; padding: 15px; font-size: 13px; }
+    /* Order Success */
+    .order-success { text-align: center; padding: 40px 20px; }
+    .order-success__icon { width: 72px; height: 72px; background: #d4edda; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; color: #28a745; margin: 0 auto 20px; }
+    .order-success__title { font-family: var(--font-head); font-size: 20px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); margin-bottom: 10px; }
+    .order-success__sub { font-family: var(--font-body); font-size: 14px; color: var(--text-mid); line-height: 1.7; margin-bottom: 24px; }
+    .order-success__id { font-family: var(--font-head); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 24px; }
+
+    /* HERO */
     .hero { position: relative; overflow: hidden; min-height: 86vh; display: flex; align-items: center; }
     .hero__media { position: absolute; inset: 0; z-index: 0; }
     .hero__media video { width: 100%; height: 100%; object-fit: cover; }
@@ -68,6 +183,8 @@
     .hero__title { font-family: var(--font-head); font-size: clamp(36px, 6vw, 70px); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.1; color: var(--white); margin-bottom: 20px; max-width: 640px; }
     .hero__subtitle { font-family: var(--font-body); font-size: clamp(14px, 1.8vw, 17px); color: rgba(255,255,255,0.88); margin-bottom: 34px; max-width: 480px; line-height: 1.7; }
     .hero__actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    /* TRUST STRIP */
     .trust-strip { background: var(--black); color: var(--white); }
     .trust-strip__inner { display: flex; align-items: stretch; max-width: var(--max-w); margin: 0 auto; flex-wrap: wrap; }
     .trust-item { flex: 1; min-width: 180px; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 18px var(--gutter); border-right: 1px solid rgba(255,255,255,0.1); }
@@ -75,10 +192,14 @@
     .trust-item__icon { font-size: 20px; color: var(--accent); flex-shrink: 0; }
     .trust-item__text strong { display: block; font-family: var(--font-head); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
     .trust-item__text span { font-family: var(--font-body); font-size: 12px; color: rgba(255,255,255,0.55); }
+
+    /* SECTION HEADING */
     .section-head { text-align: center; margin-bottom: 48px; }
     .section-head__tag { display: inline-block; font-family: var(--font-head); font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
     .section-head__title { font-family: var(--font-head); font-size: clamp(26px, 3.5vw, 42px); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--black); line-height: 1.15; }
     .section-head__subtitle { font-family: var(--font-body); font-size: 15px; color: var(--text-mid); margin-top: 14px; max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+
+    /* CATEGORIES */
     .categories { padding: var(--section-pad) 0; background: var(--cream); }
     .categories-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
     .cat-card { position: relative; overflow: hidden; aspect-ratio: 3/4; background: #e8e2dc; cursor: pointer; }
@@ -87,9 +208,13 @@
     .cat-card__overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0) 60%); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 28px 20px; text-align: center; }
     .cat-card__title { font-family: var(--font-head); font-size: 16px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); margin-bottom: 8px; }
     .cat-card__sub { font-family: var(--font-body); font-size: 13px; color: rgba(255,255,255,0.8); margin-bottom: 16px; }
+
+    /* MARQUEE */
     .marquee-section { overflow: hidden; background: var(--accent); padding: 13px 0; }
     .marquee-track { display: flex; gap: 50px; white-space: nowrap; animation: marqueeScroll 25s linear infinite; }
     .marquee-track span { font-family: var(--font-head); font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--white); display: inline-flex; align-items: center; gap: 12px; flex-shrink: 0; }
+
+    /* PRODUCTS */
     .products-section { padding: var(--section-pad) 0; background: var(--white); }
     .filter-tabs { display: flex; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; border-bottom: 2px solid #e5e5e5; }
     .filter-tab { font-family: var(--font-head); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-mid); padding: 12px 24px; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all var(--transition); }
@@ -99,12 +224,12 @@
     .product-card__img-wrap { position: relative; overflow: hidden; background: var(--light-gray); aspect-ratio: 3/4; margin-bottom: 14px; }
     .product-card__img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.45s ease; }
     .product-card:hover .product-card__img-wrap img { transform: scale(1.05); }
-    .product-card__badge { position: absolute; top: 12px; left: 12px; background: var(--accent); color: var(--white); font-family: var(--font-head); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; }
+    .product-card__badge { position: absolute; top: 12px; left: 12px; background: var(--accent); color: var(--white); font-family: var(--font-head); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; z-index: 2; }
     .product-card__badge--new { background: var(--black); }
-    .product-card__actions { position: absolute; bottom: 0; left: 0; right: 0; transform: translateY(100%); transition: transform 0.3s ease; }
+    .product-card__actions { position: absolute; bottom: 0; left: 0; right: 0; transform: translateY(100%); transition: transform 0.3s ease; z-index: 3; }
     .product-card:hover .product-card__actions { transform: translateY(0); }
-    .btn-add-cart { width: 100%; background: var(--black); color: var(--white); font-family: var(--font-head); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 13px 16px; border: none; cursor: pointer; transition: background var(--transition); display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-add-cart:hover { background: var(--accent); }
+    .btn-add-cart-card { width: 100%; background: var(--black); color: var(--white); font-family: var(--font-head); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 13px 16px; border: none; cursor: pointer; transition: background var(--transition); display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-add-cart-card:hover { background: var(--accent); }
     .product-card__info { padding: 0 2px; }
     .product-card__name { font-family: var(--font-head); font-size: 13px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); margin-bottom: 5px; line-height: 1.3; }
     .product-card__type { font-family: var(--font-body); font-size: 13px; color: var(--text-mid); margin-bottom: 8px; }
@@ -115,6 +240,8 @@
     .price-compare { font-family: var(--font-body); font-size: 13px; color: var(--text-mid); text-decoration: line-through; }
     .price-save { font-family: var(--font-head); font-size: 11px; font-weight: 600; color: #c7282c; }
     .products-view-all { text-align: center; margin-top: 48px; }
+
+    /* VIDEO BANNER */
     .video-banner { position: relative; overflow: hidden; }
     .video-banner video { width: 100%; display: block; max-height: 560px; object-fit: cover; }
     .video-banner__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; }
@@ -122,10 +249,12 @@
     .video-banner__eyebrow { font-family: var(--font-head); font-size: 11px; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
     .video-banner__title { font-family: var(--font-head); font-size: clamp(28px, 5vw, 56px); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.1; margin-bottom: 18px; }
     .video-banner__sub { font-family: var(--font-body); font-size: clamp(14px, 1.8vw, 17px); color: rgba(255,255,255,0.85); margin-bottom: 32px; line-height: 1.7; max-width: 460px; margin-left: auto; margin-right: auto; }
+
+    /* FEATURE SPLIT */
     .feature-split { padding: var(--section-pad) 0; }
     .feature-split.bg-cream { background: var(--cream); }
     .split-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 60px; }
-    .split-img { position: relative; overflow: hidden; aspect-ratio: 4/5; background: var(--light-gray); }
+    .split-img { overflow: hidden; aspect-ratio: 4/5; background: var(--light-gray); }
     .split-img img { width: 100%; height: 100%; object-fit: cover; }
     .split-body { padding: 20px 0; }
     .split-body__eyebrow { font-family: var(--font-head); font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
@@ -136,6 +265,8 @@
     .split-body__list { margin-bottom: 32px; }
     .split-body__list li { font-family: var(--font-body); font-size: 14px; color: var(--text-mid); padding: 8px 0; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
     .split-body__list li i { color: var(--accent); font-size: 13px; flex-shrink: 0; }
+
+    /* ABOUT */
     .about-section { padding: var(--section-pad) 0; background: var(--black); }
     .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
     .about-img-wrap { overflow: hidden; aspect-ratio: 4/5; background: #222; }
@@ -143,6 +274,8 @@
     .stats-row { display: flex; gap: 36px; margin-bottom: 36px; flex-wrap: wrap; }
     .stat-item__num { font-family: var(--font-head); font-size: 36px; font-weight: 700; color: var(--accent); line-height: 1; }
     .stat-item__label { font-family: var(--font-body); font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+
+    /* TESTIMONIALS */
     .testimonials { padding: var(--section-pad) 0; background: var(--cream); }
     .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     .review-card { background: var(--white); padding: 32px 28px; border: 1px solid #e8e4e0; }
@@ -151,9 +284,13 @@
     .review-card__author { font-family: var(--font-head); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); }
     .review-card__date { font-family: var(--font-body); font-size: 12px; color: var(--text-mid); margin-top: 4px; }
     .review-card__verified { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-head); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #108043; margin-top: 8px; }
+
+    /* PROMO BANNER */
     .promo-banner { background: var(--accent); padding: 50px var(--gutter); text-align: center; color: var(--white); }
     .promo-banner__title { font-family: var(--font-head); font-size: clamp(22px, 3.5vw, 38px); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 12px; }
     .promo-banner__sub { font-family: var(--font-body); font-size: 15px; color: rgba(255,255,255,0.88); margin-bottom: 28px; }
+
+    /* CONTACT */
     .contact-section { padding: var(--section-pad) 0; background: var(--cream); }
     .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
     .contact-info__item { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 28px; }
@@ -162,11 +299,9 @@
     .contact-info__val { font-family: var(--font-body); font-size: 14px; color: var(--text); line-height: 1.5; }
     .order-form { background: var(--white); border: 1px solid #e5e5e5; padding: 36px 32px; }
     .order-form h3 { font-family: var(--font-head); font-size: 16px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); margin-bottom: 24px; padding-bottom: 14px; border-bottom: 2px solid var(--black); }
-    .form-row { margin-bottom: 16px; }
-    .form-label { display: block; font-family: var(--font-head); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); margin-bottom: 6px; }
-    .form-input, .form-select, .form-textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--mid-gray); background: var(--white); font-family: var(--font-body); font-size: 14px; color: var(--text); outline: none; border-radius: 0; transition: border-color var(--transition); -webkit-appearance: none; appearance: none; }
-    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--black); }
     .form-textarea { resize: vertical; min-height: 80px; }
+
+    /* FOOTER */
     .site-footer { background: var(--footer-bg); color: rgba(255,255,255,0.7); }
     .footer-top { padding: 70px 0 50px; }
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
@@ -184,35 +319,46 @@
     .footer-bottom__links { display: flex; gap: 24px; }
     .footer-bottom__links a { font-family: var(--font-body); font-size: 13px; color: rgba(255,255,255,0.3); transition: color var(--transition); }
     .footer-bottom__links a:hover { color: var(--accent); }
+
+    /* WHATSAPP FLOAT */
     .wa-float { position: fixed; bottom: 24px; right: 24px; z-index: 300; width: 54px; height: 54px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; color: var(--white); box-shadow: 0 4px 20px rgba(37,211,102,0.4); transition: transform var(--transition); text-decoration: none; }
     .wa-float:hover { transform: scale(1.1); }
+
+    /* SCROLL REVEAL */
     [data-reveal] { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
     [data-reveal].visible { opacity: 1; transform: translateY(0); }
+
+    /* RESPONSIVE */
     @media (max-width: 1024px) { .product-grid { grid-template-columns: repeat(3, 1fr); } .footer-grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 768px) {
-      .nav-left { display: none; } .nav-right > a { display: none; } .burger-btn { display: flex; }
-      .header-inner { grid-template-columns: auto 1fr auto; } .site-logo { justify-content: flex-start; }
+      .nav-left, .nav-right-links { display: none; } .burger-btn { display: flex; }
+      .header-inner { grid-template-columns: auto 1fr auto; }
       .hero { min-height: 65vh; } .categories-grid { grid-template-columns: 1fr; } .cat-card { aspect-ratio: 16/9; }
       .product-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; } .split-grid { grid-template-columns: 1fr; gap: 32px; } .split-img { aspect-ratio: 4/3; }
       .reviews-grid { grid-template-columns: 1fr; } .about-grid { grid-template-columns: 1fr; gap: 36px; } .about-img-wrap { aspect-ratio: 4/3; }
       .contact-grid { grid-template-columns: 1fr; } .order-form { padding: 24px 20px; } .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
-      .footer-bottom { flex-direction: column; text-align: center; }
-      .trust-item { min-width: 50%; border-bottom: 1px solid rgba(255,255,255,0.1); }
-      .trust-item:nth-child(even) { border-right: none; }
+      .footer-bottom { flex-direction: column; text-align: center; } .trust-item { min-width: 50%; border-bottom: 1px solid rgba(255,255,255,0.1); }
+      .cart-sidebar { width: 100%; right: -100%; }
+      .form-row-2 { grid-template-columns: 1fr; }
     }
-    @media (max-width: 480px) { .product-grid { gap: 12px; } .hero__title { font-size: 28px; } .hero__actions { flex-direction: column; } .hero__actions .btn { width: 100%; } .footer-grid { grid-template-columns: 1fr; } .stats-row { gap: 20px; } }
+    @media (max-width: 480px) {
+      .product-grid { gap: 12px; } .hero__title { font-size: 28px; } .hero__actions { flex-direction: column; }
+      .hero__actions .btn { width: 100%; } .footer-grid { grid-template-columns: 1fr; } .stats-row { gap: 20px; }
+      .checkout-body { padding: 20px 16px; } .checkout-hdr { padding: 18px 16px; } .checkout-steps { padding: 12px 16px; }
+    }
   </style>
 </head>
 <body>
+
   <!-- ANNOUNCEMENT BAR -->
   <div class="ann-bar"><div class="ann-bar__track">
     <span><i class="fas fa-truck"></i>Free Delivery on Orders Above &#8377;999</span>
     <span><i class="fas fa-star"></i>100% Authentic Non-Alcoholic Attars</span>
-    <span><i class="fab fa-whatsapp"></i>Order via WhatsApp: +91 95602 91377</span>
+    <span><i class="fas fa-credit-card"></i>Online Payment &amp; Cash on Delivery Available</span>
     <span><i class="fas fa-shield-alt"></i>Handcrafted in Greater Noida</span>
     <span><i class="fas fa-truck"></i>Free Delivery on Orders Above &#8377;999</span>
     <span><i class="fas fa-star"></i>100% Authentic Non-Alcoholic Attars</span>
-    <span><i class="fab fa-whatsapp"></i>Order via WhatsApp: +91 95602 91377</span>
+    <span><i class="fas fa-credit-card"></i>Online Payment &amp; Cash on Delivery Available</span>
     <span><i class="fas fa-shield-alt"></i>Handcrafted in Greater Noida</span>
   </div></div>
 
@@ -226,10 +372,16 @@
         <img src="https://www.yashelfragrance.com/assets/yashel%20logo-removebg-preview.png" alt="Yashel Fragrance" id="logoImg" onerror="this.style.display='none';document.getElementById('logoText').style.display='block';" />
         <span class="logo-fallback" id="logoText">YASHEL</span>
       </div>
-      <nav class="nav-right">
-        <a href="#products">Collections</a><a href="#contact">Contact</a>
+      <div class="nav-right">
+        <div class="nav-right-links">
+          <a href="#products">Collections</a><a href="#contact">Contact</a>
+        </div>
+        <button class="cart-btn" id="cartBtn" aria-label="Open Cart">
+          <i class="fas fa-shopping-bag"></i>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
         <button class="burger-btn" id="burgerBtn" aria-label="Open Menu"><i class="fas fa-bars"></i></button>
-      </nav>
+      </div>
     </div>
   </header>
 
@@ -254,6 +406,190 @@
     </div>
   </div>
 
+  <!-- CART SIDEBAR -->
+  <div class="cart-backdrop" id="cartBackdrop"></div>
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h2><i class="fas fa-shopping-bag" style="margin-right:8px;color:var(--accent)"></i>Your Cart <span id="cartCount" style="font-weight:400;color:var(--text-mid)"></span></h2>
+      <button class="cart-close-btn" id="cartCloseBtn"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <!-- filled by JS -->
+    </div>
+    <div class="cart-footer" id="cartFooter" style="display:none">
+      <div class="cart-totals">
+        <div class="cart-total-row"><span>Subtotal</span><span id="cartSubtotal">&#8377;0</span></div>
+        <div class="cart-total-row"><span>Delivery</span><span id="cartDelivery">&#8377;60</span></div>
+        <div class="cart-total-row grand"><span>Total</span><span id="cartTotal">&#8377;0</span></div>
+      </div>
+      <button class="btn btn-primary cart-checkout-btn" onclick="openCheckout()">
+        <i class="fas fa-lock" style="font-size:11px"></i> Proceed to Checkout
+      </button>
+      <span class="cart-continue" onclick="closeCart()">&#8592; Continue Shopping</span>
+    </div>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="checkout-modal" id="checkoutModal">
+    <div class="checkout-backdrop" id="checkoutBackdrop"></div>
+    <div class="checkout-box">
+      <div class="checkout-hdr">
+        <h2 id="checkoutTitle">Secure Checkout</h2>
+        <button class="checkout-close" onclick="closeCheckout()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="checkout-steps" id="checkoutSteps">
+        <div class="step-dot active" id="step1dot">
+          <div class="step-num">1</div><span>Details</span>
+        </div>
+        <div class="step-sep"></div>
+        <div class="step-dot" id="step2dot">
+          <div class="step-num">2</div><span>Address</span>
+        </div>
+        <div class="step-sep"></div>
+        <div class="step-dot" id="step3dot">
+          <div class="step-num">3</div><span>Payment</span>
+        </div>
+      </div>
+      <div class="checkout-body">
+
+        <!-- STEP 1: PERSONAL DETAILS -->
+        <div class="checkout-step active" id="chkStep1">
+          <div class="chk-section-title">Your Details</div>
+          <div class="form-row">
+            <label class="form-label">Full Name <span>*</span></label>
+            <input type="text" class="form-input" id="chkName" placeholder="e.g. Harsh Goyal" />
+            <div class="form-error" id="chkNameErr">Please enter your full name.</div>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Phone Number <span>*</span></label>
+            <input type="tel" class="form-input" id="chkPhone" placeholder="+91 XXXXX XXXXX" />
+            <div class="form-error" id="chkPhoneErr">Please enter a valid 10-digit phone number.</div>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Email Address <span style="color:var(--text-mid);font-size:10px;font-weight:400;text-transform:none;letter-spacing:0">(optional, for order confirmation)</span></label>
+            <input type="email" class="form-input" id="chkEmail" placeholder="you@example.com" />
+          </div>
+          <div class="chk-nav">
+            <button class="btn btn-primary chk-next" onclick="goStep(2)">
+              Continue to Address <i class="fas fa-arrow-right" style="font-size:11px"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: DELIVERY ADDRESS -->
+        <div class="checkout-step" id="chkStep2">
+          <div class="chk-section-title">Delivery Address</div>
+          <div class="form-row">
+            <label class="form-label">House / Flat / Building <span>*</span></label>
+            <input type="text" class="form-input" id="chkAddr1" placeholder="House no., flat, building name" />
+            <div class="form-error" id="chkAddr1Err">Please enter your address.</div>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Street / Area / Locality <span>*</span></label>
+            <input type="text" class="form-input" id="chkAddr2" placeholder="Street, area, locality" />
+            <div class="form-error" id="chkAddr2Err">Please enter your street/area.</div>
+          </div>
+          <div class="form-row-2">
+            <div>
+              <label class="form-label">City <span>*</span></label>
+              <input type="text" class="form-input" id="chkCity" placeholder="City" />
+              <div class="form-error" id="chkCityErr">Required.</div>
+            </div>
+            <div>
+              <label class="form-label">Pincode <span>*</span></label>
+              <input type="text" class="form-input" id="chkPin" placeholder="110001" maxlength="6" />
+              <div class="form-error" id="chkPinErr">Enter valid 6-digit pincode.</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <label class="form-label">State <span>*</span></label>
+            <select class="form-select" id="chkState">
+              <option value="">Select State</option>
+              <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option>
+              <option>Bihar</option><option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option>
+              <option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option>
+              <option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option>
+              <option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option>
+              <option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option>
+              <option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option>
+              <option>Telangana</option><option>Tripura</option><option selected>Uttar Pradesh</option>
+              <option>Uttarakhand</option><option>West Bengal</option>
+              <option>Delhi (NCT)</option><option>Jammu &amp; Kashmir</option><option>Ladakh</option>
+              <option>Chandigarh</option><option>Puducherry</option>
+            </select>
+            <div class="form-error" id="chkStateErr">Please select your state.</div>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Order Notes <span style="color:var(--text-mid);font-size:10px;font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+            <textarea class="form-input form-textarea" id="chkNotes" placeholder="Any special delivery instructions..."></textarea>
+          </div>
+          <div class="chk-nav">
+            <button class="chk-back" onclick="goStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="btn btn-primary chk-next" onclick="goStep(3)">
+              Continue to Payment <i class="fas fa-arrow-right" style="font-size:11px"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3: PAYMENT -->
+        <div class="checkout-step" id="chkStep3">
+          <div class="chk-section-title">Order Summary</div>
+          <div class="chk-order-items" id="chkOrderItems"></div>
+          <div class="chk-totals" id="chkTotals"></div>
+
+          <div style="margin-top:24px">
+            <div class="chk-section-title">Select Payment Method</div>
+            <div class="payment-options">
+              <label class="payment-option selected" id="payOptCOD">
+                <input type="radio" name="payment" value="cod" checked onchange="selectPayment('cod')" />
+                <div>
+                  <div class="payment-option__label">Cash on Delivery</div>
+                  <div class="payment-option__sub">Pay when your order arrives at your door.</div>
+                </div>
+                <div class="payment-option__icons"><i class="fas fa-money-bill-wave"></i></div>
+              </label>
+              <label class="payment-option" id="payOptOnline">
+                <input type="radio" name="payment" value="online" onchange="selectPayment('online')" />
+                <div>
+                  <div class="payment-option__label">Pay Online</div>
+                  <div class="payment-option__sub">UPI, Credit / Debit Card, Net Banking, Wallets via Razorpay.</div>
+                </div>
+                <div class="payment-option__icons">
+                  <i class="fas fa-credit-card"></i>
+                  <i class="fas fa-university" style="font-size:18px"></i>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="chk-nav">
+            <button class="chk-back" onclick="goStep(2)"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="btn btn-primary chk-next" id="placeOrderBtn" onclick="placeOrder()">
+              <i class="fas fa-lock" style="font-size:11px"></i> Place Order
+            </button>
+          </div>
+          <p style="text-align:center;font-family:var(--font-body);font-size:12px;color:var(--text-mid);margin-top:16px">
+            <i class="fas fa-shield-alt" style="color:var(--accent)"></i> 100% Secure &bull; Powered by Razorpay
+          </p>
+        </div>
+
+        <!-- STEP 4: SUCCESS -->
+        <div class="checkout-step" id="chkStep4">
+          <div class="order-success">
+            <div class="order-success__icon"><i class="fas fa-check"></i></div>
+            <div class="order-success__title">Order Placed!</div>
+            <div class="order-success__sub" id="successMsg">Thank you for your order. We will contact you shortly to confirm delivery details.</div>
+            <div class="order-success__id" id="successOrderId"></div>
+            <button class="btn btn-primary" onclick="closeCheckout();closeCart();" style="margin:0 auto">
+              <i class="fas fa-home" style="font-size:11px"></i> Back to Shop
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- HERO -->
   <section class="hero">
     <div class="hero__media"><video autoplay muted loop playsinline><source src="landing-page-1.mp4" type="video/mp4" /></video></div>
@@ -273,7 +609,7 @@
   <div class="trust-strip"><div class="trust-strip__inner">
     <div class="trust-item"><span class="trust-item__icon"><i class="fas fa-truck"></i></span><div class="trust-item__text"><strong>Free Delivery</strong><span>On orders above &#8377;999</span></div></div>
     <div class="trust-item"><span class="trust-item__icon"><i class="fas fa-certificate"></i></span><div class="trust-item__text"><strong>100% Authentic</strong><span>Pure non-alcoholic attars</span></div></div>
-    <div class="trust-item"><span class="trust-item__icon"><i class="fab fa-whatsapp"></i></span><div class="trust-item__text"><strong>WhatsApp Order</strong><span>+91 95602 91377</span></div></div>
+    <div class="trust-item"><span class="trust-item__icon"><i class="fas fa-credit-card"></i></span><div class="trust-item__text"><strong>Secure Payment</strong><span>UPI, Card, COD via Razorpay</span></div></div>
     <div class="trust-item"><span class="trust-item__icon"><i class="fas fa-undo"></i></span><div class="trust-item__text"><strong>Easy Returns</strong><span>7-day return policy</span></div></div>
   </div></div>
 
@@ -304,8 +640,8 @@
 
   <!-- MARQUEE -->
   <div class="marquee-section"><div class="marquee-track">
-    <span>Premium Fragrances</span><span>Greater Noida Atelier</span><span>Pure Royal Attars</span><span>Handcrafted Perfumes</span><span>Long-Lasting Luxury</span><span>Non-Alcoholic</span><span>Made With Love</span>
-    <span>Premium Fragrances</span><span>Greater Noida Atelier</span><span>Pure Royal Attars</span><span>Handcrafted Perfumes</span><span>Long-Lasting Luxury</span><span>Non-Alcoholic</span><span>Made With Love</span>
+    <span>Premium Fragrances</span><span>Greater Noida Atelier</span><span>Pure Royal Attars</span><span>Handcrafted Perfumes</span><span>Long-Lasting Luxury</span><span>Secure Online Payment</span><span>Cash on Delivery</span>
+    <span>Premium Fragrances</span><span>Greater Noida Atelier</span><span>Pure Royal Attars</span><span>Handcrafted Perfumes</span><span>Long-Lasting Luxury</span><span>Secure Online Payment</span><span>Cash on Delivery</span>
   </div></div>
 
   <!-- PRODUCTS -->
@@ -324,35 +660,35 @@
       </div>
       <div class="product-grid" id="productGrid">
         <div class="product-card" data-category="edp">
-          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/CREED%20AVENTUS%20%20Yashel%20Fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Creed Aventus" loading="lazy" /><div class="product-card__badge">Best Seller</div><div class="product-card__actions"><button class="btn-add-cart" onclick="orderWhatsApp('Creed Aventus EDP 100ml')"><i class="fab fa-whatsapp"></i> Order Now</button></div></div>
+          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/CREED%20AVENTUS%20%20Yashel%20Fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Creed Aventus" loading="lazy" /><div class="product-card__badge">Best Seller</div><div class="product-card__actions"><button class="btn-add-cart-card" onclick="addToCart('creed-aventus')"><i class="fas fa-shopping-bag"></i> Add to Cart</button></div></div>
           <div class="product-card__info"><div class="product-card__stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(48)</span></div><h3 class="product-card__name">Creed Aventus</h3><p class="product-card__type">Eau de Parfum &middot; 100ml</p><div class="product-card__price"><span class="price-sale">&#8377;1,199</span><span class="price-compare">&#8377;1,999</span><span class="price-save">40% OFF</span></div></div>
         </div>
         <div class="product-card" data-category="edp">
-          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/COOL%20WATER%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Cool Water" loading="lazy" /><div class="product-card__badge product-card__badge--new">New</div><div class="product-card__actions"><button class="btn-add-cart" onclick="orderWhatsApp('Cool Water EDP 100ml')"><i class="fab fa-whatsapp"></i> Order Now</button></div></div>
+          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/COOL%20WATER%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Cool Water" loading="lazy" /><div class="product-card__badge product-card__badge--new">New</div><div class="product-card__actions"><button class="btn-add-cart-card" onclick="addToCart('cool-water')"><i class="fas fa-shopping-bag"></i> Add to Cart</button></div></div>
           <div class="product-card__info"><div class="product-card__stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><span>(31)</span></div><h3 class="product-card__name">Cool Water</h3><p class="product-card__type">Eau de Parfum &middot; 100ml</p><div class="product-card__price"><span class="price-sale">&#8377;1,199</span><span class="price-compare">&#8377;1,999</span><span class="price-save">40% OFF</span></div></div>
         </div>
         <div class="product-card" data-category="edp sale">
-          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/DUBAI%20GOLD%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Dubai Gold" loading="lazy" /><div class="product-card__badge">Sale</div><div class="product-card__actions"><button class="btn-add-cart" onclick="orderWhatsApp('Dubai Gold EDP 100ml')"><i class="fab fa-whatsapp"></i> Order Now</button></div></div>
+          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/DUBAI%20GOLD%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Dubai Gold" loading="lazy" /><div class="product-card__badge">Sale</div><div class="product-card__actions"><button class="btn-add-cart-card" onclick="addToCart('dubai-gold')"><i class="fas fa-shopping-bag"></i> Add to Cart</button></div></div>
           <div class="product-card__info"><div class="product-card__stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(27)</span></div><h3 class="product-card__name">Dubai Gold</h3><p class="product-card__type">Eau de Parfum &middot; 100ml</p><div class="product-card__price"><span class="price-sale">&#8377;1,199</span><span class="price-compare">&#8377;1,999</span><span class="price-save">40% OFF</span></div></div>
         </div>
         <div class="product-card" data-category="edp">
-          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/DUNHIL%20BLUE%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Dunhill Blue" loading="lazy" /><div class="product-card__actions"><button class="btn-add-cart" onclick="orderWhatsApp('Dunhill Blue EDP 100ml')"><i class="fab fa-whatsapp"></i> Order Now</button></div></div>
+          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/DUNHIL%20BLUE%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Dunhill Blue" loading="lazy" /><div class="product-card__actions"><button class="btn-add-cart-card" onclick="addToCart('dunhill-blue')"><i class="fas fa-shopping-bag"></i> Add to Cart</button></div></div>
           <div class="product-card__info"><div class="product-card__stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(19)</span></div><h3 class="product-card__name">Dunhill Blue</h3><p class="product-card__type">Eau de Parfum &middot; 100ml</p><div class="product-card__price"><span class="price-sale">&#8377;1,199</span><span class="price-compare">&#8377;1,999</span><span class="price-save">40% OFF</span></div></div>
         </div>
         <div class="product-card" data-category="attar" id="attars">
-          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/Rose%20Musk%20Yashel%20fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Rose Musk Attar" loading="lazy" /><div class="product-card__badge product-card__badge--new">Pure Attar</div><div class="product-card__actions"><button class="btn-add-cart" onclick="orderWhatsApp('Rose Musk Attar 12ml')"><i class="fab fa-whatsapp"></i> Order Now</button></div></div>
+          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/Rose%20Musk%20Yashel%20fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Rose Musk Attar" loading="lazy" /><div class="product-card__badge product-card__badge--new">Pure Attar</div><div class="product-card__actions"><button class="btn-add-cart-card" onclick="addToCart('rose-musk')"><i class="fas fa-shopping-bag"></i> Add to Cart</button></div></div>
           <div class="product-card__info"><div class="product-card__stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(42)</span></div><h3 class="product-card__name">Rose Musk</h3><p class="product-card__type">Pure Attar &middot; 12ml &middot; Non-Alcoholic</p><div class="product-card__price"><span class="price-sale">&#8377;699</span><span class="price-compare">&#8377;999</span><span class="price-save">30% OFF</span></div></div>
         </div>
         <div class="product-card" data-category="attar">
-          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/White%20OUD%20Yashel%20fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="White Oud Attar" loading="lazy" /><div class="product-card__badge product-card__badge--new">Pure Attar</div><div class="product-card__actions"><button class="btn-add-cart" onclick="orderWhatsApp('White Oud Attar 12ml')"><i class="fab fa-whatsapp"></i> Order Now</button></div></div>
+          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/White%20OUD%20Yashel%20fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="White Oud Attar" loading="lazy" /><div class="product-card__badge product-card__badge--new">Pure Attar</div><div class="product-card__actions"><button class="btn-add-cart-card" onclick="addToCart('white-oud')"><i class="fas fa-shopping-bag"></i> Add to Cart</button></div></div>
           <div class="product-card__info"><div class="product-card__stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><span>(36)</span></div><h3 class="product-card__name">White Oud</h3><p class="product-card__type">Pure Attar &middot; 12ml &middot; Non-Alcoholic</p><div class="product-card__price"><span class="price-sale">&#8377;799</span><span class="price-compare">&#8377;1,199</span><span class="price-save">33% OFF</span></div></div>
         </div>
         <div class="product-card" data-category="attar sale">
-          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/Royal%20OUD%20Yashel%20fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Royal Oud Attar" loading="lazy" /><div class="product-card__badge">Best Seller</div><div class="product-card__actions"><button class="btn-add-cart" onclick="orderWhatsApp('Royal Oud Attar 12ml')"><i class="fab fa-whatsapp"></i> Order Now</button></div></div>
+          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/Royal%20OUD%20Yashel%20fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Royal Oud Attar" loading="lazy" /><div class="product-card__badge">Best Seller</div><div class="product-card__actions"><button class="btn-add-cart-card" onclick="addToCart('royal-oud')"><i class="fas fa-shopping-bag"></i> Add to Cart</button></div></div>
           <div class="product-card__info"><div class="product-card__stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(58)</span></div><h3 class="product-card__name">Royal Oud</h3><p class="product-card__type">Pure Attar &middot; 12ml &middot; Non-Alcoholic</p><div class="product-card__price"><span class="price-sale">&#8377;799</span><span class="price-compare">&#8377;1,199</span><span class="price-save">33% OFF</span></div></div>
         </div>
         <div class="product-card" data-category="edp sale">
-          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/DARK%20NIGHT%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Dark Night" loading="lazy" /><div class="product-card__badge">Hot</div><div class="product-card__actions"><button class="btn-add-cart" onclick="orderWhatsApp('Dark Night EDP 100ml')"><i class="fab fa-whatsapp"></i> Order Now</button></div></div>
+          <div class="product-card__img-wrap"><img src="https://www.yashelfragrance.com/assets/DARK%20NIGHT%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp" alt="Dark Night" loading="lazy" /><div class="product-card__badge">Hot</div><div class="product-card__actions"><button class="btn-add-cart-card" onclick="addToCart('dark-night')"><i class="fas fa-shopping-bag"></i> Add to Cart</button></div></div>
           <div class="product-card__info"><div class="product-card__stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(22)</span></div><h3 class="product-card__name">Dark Night</h3><p class="product-card__type">Eau de Parfum &middot; 100ml</p><div class="product-card__price"><span class="price-sale">&#8377;1,199</span><span class="price-compare">&#8377;1,999</span><span class="price-save">40% OFF</span></div></div>
         </div>
       </div>
@@ -385,11 +721,13 @@
           <ul class="split-body__list">
             <li><i class="fas fa-check-circle"></i>100% authentic non-alcoholic attars</li>
             <li><i class="fas fa-check-circle"></i>Long-lasting EDP formulas &mdash; up to 12 hours</li>
-            <li><i class="fas fa-check-circle"></i>Cruelty-free, skin-safe ingredients</li>
-            <li><i class="fas fa-check-circle"></i>Handcrafted in limited batches</li>
-            <li><i class="fas fa-check-circle"></i>WhatsApp ordering &mdash; delivered to your door</li>
+            <li><i class="fas fa-check-circle"></i>Secure online payments via Razorpay</li>
+            <li><i class="fas fa-check-circle"></i>Cash on delivery available</li>
+            <li><i class="fas fa-check-circle"></i>Free delivery on orders above &#8377;999</li>
           </ul>
-          <a href="#contact" class="btn btn-primary">Order Now</a>
+          <button class="btn btn-primary" onclick="document.getElementById('cartBtn').click();document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+            <i class="fas fa-shopping-bag"></i> Shop Now
+          </button>
         </div>
       </div>
     </div>
@@ -438,19 +776,19 @@
       <div class="reviews-grid">
         <div class="review-card" data-reveal>
           <div class="review-card__stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-          <p class="review-card__text">"The Royal Oud attar is absolutely divine. It lasts all day on my skin and I keep getting compliments. The packaging is elegant and delivery was super fast. Will definitely order again!"</p>
+          <p class="review-card__text">"The Royal Oud attar is absolutely divine. It lasts all day on my skin and I keep getting compliments. Ordered online, payment was seamless and delivery was super fast!"</p>
           <div class="review-card__author">Priya Sharma</div><div class="review-card__date">Delhi &mdash; 12 August 2026</div>
           <div class="review-card__verified"><i class="fas fa-check-circle"></i> Verified Purchase</div>
         </div>
         <div class="review-card" data-reveal style="transition-delay:0.1s">
           <div class="review-card__stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-          <p class="review-card__text">"I ordered the Creed Aventus EDP and I am blown away by the quality. It smells exactly like the original but at a fraction of the price. Yashel has earned a lifetime customer in me."</p>
+          <p class="review-card__text">"Creed Aventus EDP is top quality at an unbelievable price. Paid via UPI through Razorpay &mdash; process was instant and secure. Will order again!"</p>
           <div class="review-card__author">Rahul Verma</div><div class="review-card__date">Noida &mdash; 3 September 2026</div>
           <div class="review-card__verified"><i class="fas fa-check-circle"></i> Verified Purchase</div>
         </div>
         <div class="review-card" data-reveal style="transition-delay:0.2s">
           <div class="review-card__stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-          <p class="review-card__text">"Ordered via WhatsApp &mdash; it was the easiest shopping experience ever. Got Rose Musk and White Oud attars. Both are incredible, pure and long lasting. Highly recommend!"</p>
+          <p class="review-card__text">"Got Rose Musk and White Oud attars. Both are incredible and pure. Chose COD option, delivery was on time and the packaging was beautiful. Highly recommend!"</p>
           <div class="review-card__author">Anjali Singh</div><div class="review-card__date">Lucknow &mdash; 28 August 2026</div>
           <div class="review-card__verified"><i class="fas fa-check-circle"></i> Verified Purchase</div>
         </div>
@@ -461,8 +799,10 @@
   <!-- PROMO BANNER -->
   <div class="promo-banner">
     <h2 class="promo-banner__title">Smell Extraordinary. Every Day.</h2>
-    <p class="promo-banner__sub">EDP 100ml starting at &#8377;1,199 &middot; Attars from &#8377;699 &middot; Free delivery on orders above &#8377;999</p>
-    <a href="https://wa.me/919560291377?text=Hi%20Yashel%2C%20I%27d%20like%20to%20place%20an%20order." class="btn btn-primary" style="background:var(--black);border-color:var(--black);" target="_blank"><i class="fab fa-whatsapp"></i> Order on WhatsApp</a>
+    <p class="promo-banner__sub">EDP 100ml from &#8377;1,199 &middot; Attars from &#8377;699 &middot; Free delivery above &#8377;999 &middot; COD &amp; Online Payment</p>
+    <button class="btn btn-primary" style="background:var(--black);border-color:var(--black);margin:0 auto" onclick="openCart()">
+      <i class="fas fa-shopping-bag"></i> Shop Now
+    </button>
   </div>
 
   <!-- CONTACT -->
@@ -471,14 +811,14 @@
       <div class="section-head" data-reveal>
         <span class="section-head__tag">Get In Touch</span>
         <h2 class="section-head__title">Contact &amp; Order</h2>
-        <p class="section-head__subtitle">Place a custom order, ask a question, or visit our Greater Noida atelier.</p>
+        <p class="section-head__subtitle">Have a question? We are here to help &mdash; reach us on WhatsApp or use the form below.</p>
       </div>
       <div class="contact-grid">
         <div data-reveal>
-          <div class="contact-info__item"><div class="contact-info__icon"><i class="fab fa-whatsapp"></i></div><div><div class="contact-info__label">WhatsApp Order</div><div class="contact-info__val">+91 95602 91377<br/>Mon&ndash;Sun, 10:00 AM &ndash; 9:00 PM IST</div></div></div>
+          <div class="contact-info__item"><div class="contact-info__icon"><i class="fab fa-whatsapp"></i></div><div><div class="contact-info__label">WhatsApp</div><div class="contact-info__val">+91 95602 91377<br/>Mon&ndash;Sun, 10:00 AM &ndash; 9:00 PM IST</div></div></div>
           <div class="contact-info__item"><div class="contact-info__icon"><i class="fas fa-map-marker-alt"></i></div><div><div class="contact-info__label">Atelier</div><div class="contact-info__val">Greater Noida, Uttar Pradesh, India</div></div></div>
           <div class="contact-info__item"><div class="contact-info__icon"><i class="fas fa-clock"></i></div><div><div class="contact-info__label">Hours</div><div class="contact-info__val">Monday &ndash; Sunday<br/>10:00 AM &ndash; 9:00 PM IST</div></div></div>
-          <div class="contact-info__item"><div class="contact-info__icon"><i class="fas fa-phone"></i></div><div><div class="contact-info__label">Phone</div><div class="contact-info__val">+91 95602 91377</div></div></div>
+          <div class="contact-info__item"><div class="contact-info__icon"><i class="fas fa-credit-card"></i></div><div><div class="contact-info__label">Payment</div><div class="contact-info__val">UPI, Card, Net Banking via Razorpay<br/>Cash on Delivery available</div></div></div>
         </div>
         <div class="order-form" data-reveal>
           <h3>Send Us A Message</h3>
@@ -500,7 +840,7 @@
               <option>Other / Custom Order</option>
             </select>
           </div>
-          <div class="form-row"><label class="form-label">Message (Optional)</label><textarea class="form-textarea" placeholder="Any special requests or questions..." id="fmsg"></textarea></div>
+          <div class="form-row"><label class="form-label">Message (Optional)</label><textarea class="form-input form-textarea" placeholder="Any special requests or questions..." id="fmsg"></textarea></div>
           <button class="btn btn-primary" style="width:100%;justify-content:center;padding:15px;" onclick="sendContactWhatsApp()"><i class="fab fa-whatsapp"></i> Send via WhatsApp</button>
         </div>
       </div>
@@ -539,25 +879,377 @@
     <div class="container">
       <div class="footer-bottom">
         <p class="footer-bottom__copy">&copy; 2026 Yashel Fragrance. All rights reserved. Founded by Ankit Goyal &amp; Ishani Pandit.</p>
-        <div class="footer-bottom__links"><a href="#contact">Privacy Policy</a><a href="#contact">Terms of Service</a><a href="#contact">Shipping</a></div>
+        <div class="footer-bottom__links"><a href="#contact">Privacy</a><a href="#contact">Terms</a><a href="#contact">Shipping</a></div>
       </div>
     </div>
   </footer>
 
-  <!-- WHATSAPP FLOAT -->
   <a href="https://wa.me/919560291377?text=Hi%20Yashel%2C%20I%27d%20like%20to%20place%20an%20order." class="wa-float" target="_blank" aria-label="Order on WhatsApp"><i class="fab fa-whatsapp"></i></a>
 
   <script>
-    var burgerBtn=document.getElementById('burgerBtn'),mobileDrawer=document.getElementById('mobileDrawer'),drawerOverlay=document.getElementById('drawerOverlay'),drawerClose=document.getElementById('drawerClose');
-    function openDrawer(){mobileDrawer.classList.add('open');document.body.style.overflow='hidden';}
-    function closeDrawer(){mobileDrawer.classList.remove('open');document.body.style.overflow='';}
-    burgerBtn.addEventListener('click',openDrawer);drawerOverlay.addEventListener('click',closeDrawer);drawerClose.addEventListener('click',closeDrawer);
-    function filterProducts(tab,btn){document.querySelectorAll('.filter-tab').forEach(function(t){t.classList.remove('active');});btn.classList.add('active');document.querySelectorAll('.product-card').forEach(function(card){var cats=card.getAttribute('data-category')||'';card.style.display=(tab==='all'||cats.indexOf(tab)>-1)?'':'none';});}
-    function orderWhatsApp(product){var msg=encodeURIComponent('Hi Yashel! I would like to order: '+product+'\n\nPlease share availability and payment details. Thank you!');window.open('https://wa.me/919560291377?text='+msg,'_blank');}
-    function sendContactWhatsApp(){var name=document.getElementById('fname').value.trim()||'Customer',phone=document.getElementById('fphone').value.trim(),product=document.getElementById('fproduct').value||'Not specified',msg_=document.getElementById('fmsg').value.trim();var text=encodeURIComponent('Hi Yashel! I am interested in placing an order.\n\nName: '+name+'\nPhone: '+(phone||'N/A')+'\nProduct: '+product+(msg_?'\nMessage: '+msg_:''));window.open('https://wa.me/919560291377?text='+text,'_blank');}
-    var revealEls=document.querySelectorAll('[data-reveal]'),revealObs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
-    revealEls.forEach(function(el){revealObs.observe(el);});
-    var header=document.getElementById('siteHeader');window.addEventListener('scroll',function(){header.style.boxShadow=window.scrollY>20?'0 2px 20px rgba(0,0,0,0.1)':'none';});
+  // ============================================================
+  //  PRODUCT CATALOGUE
+  // ============================================================
+  var PRODUCTS = {
+    'creed-aventus':{ id:'creed-aventus', name:'Creed Aventus', type:'Eau de Parfum \u00b7 100ml', price:1199, mrp:1999, img:'https://www.yashelfragrance.com/assets/CREED%20AVENTUS%20%20Yashel%20Fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp' },
+    'cool-water':   { id:'cool-water',    name:'Cool Water',    type:'Eau de Parfum \u00b7 100ml', price:1199, mrp:1999, img:'https://www.yashelfragrance.com/assets/COOL%20WATER%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp' },
+    'dubai-gold':   { id:'dubai-gold',    name:'Dubai Gold',    type:'Eau de Parfum \u00b7 100ml', price:1199, mrp:1999, img:'https://www.yashelfragrance.com/assets/DUBAI%20GOLD%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp' },
+    'dunhill-blue': { id:'dunhill-blue',  name:'Dunhill Blue',  type:'Eau de Parfum \u00b7 100ml', price:1199, mrp:1999, img:'https://www.yashelfragrance.com/assets/DUNHIL%20BLUE%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp' },
+    'rose-musk':    { id:'rose-musk',     name:'Rose Musk',     type:'Pure Attar \u00b7 12ml \u00b7 Non-Alcoholic', price:699, mrp:999, img:'https://www.yashelfragrance.com/assets/Rose%20Musk%20Yashel%20fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp' },
+    'white-oud':    { id:'white-oud',     name:'White Oud',     type:'Pure Attar \u00b7 12ml \u00b7 Non-Alcoholic', price:799, mrp:1199, img:'https://www.yashelfragrance.com/assets/White%20OUD%20Yashel%20fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp' },
+    'royal-oud':    { id:'royal-oud',     name:'Royal Oud',     type:'Pure Attar \u00b7 12ml \u00b7 Non-Alcoholic', price:799, mrp:1199, img:'https://www.yashelfragrance.com/assets/Royal%20OUD%20Yashel%20fragrance%20best%20perfume%20shop%20in%20Greater%20Noida.webp' },
+    'dark-night':   { id:'dark-night',    name:'Dark Night',    type:'Eau de Parfum \u00b7 100ml', price:1199, mrp:1999, img:'https://www.yashelfragrance.com/assets/DARK%20NIGHT%20YASHEL%20FRAGRANCE%20%20best%20perfume%20shop%20in%20Greater%20Noida.webp' }
+  };
+
+  // ============================================================
+  //  CART STATE (localStorage)
+  // ============================================================
+  var cart = JSON.parse(localStorage.getItem('yashelCart') || '[]');
+
+  function saveCart(){ localStorage.setItem('yashelCart', JSON.stringify(cart)); }
+
+  function getCartTotal(){
+    var sub = cart.reduce(function(s,i){ return s + i.price * i.qty; }, 0);
+    var delivery = sub >= 999 ? 0 : 60;
+    return { subtotal: sub, delivery: delivery, total: sub + delivery };
+  }
+
+  function fmt(n){ return '\u20b9' + n.toLocaleString('en-IN'); }
+
+  function addToCart(productId){
+    var p = PRODUCTS[productId];
+    if(!p) return;
+    var existing = cart.find(function(i){ return i.id === productId; });
+    if(existing){ existing.qty++; }
+    else { cart.push({ id:p.id, name:p.name, type:p.type, price:p.price, mrp:p.mrp, img:p.img, qty:1 }); }
+    saveCart();
+    renderCart();
+    openCart();
+  }
+
+  function changeQty(id, delta){
+    var item = cart.find(function(i){ return i.id === id; });
+    if(!item) return;
+    item.qty += delta;
+    if(item.qty <= 0){ cart = cart.filter(function(i){ return i.id !== id; }); }
+    saveCart();
+    renderCart();
+  }
+
+  function removeFromCart(id){
+    cart = cart.filter(function(i){ return i.id !== id; });
+    saveCart();
+    renderCart();
+  }
+
+  function renderCart(){
+    var el = document.getElementById('cartItems');
+    var footer = document.getElementById('cartFooter');
+    var badge = document.getElementById('cartBadge');
+    var countEl = document.getElementById('cartCount');
+    var totalCount = cart.reduce(function(s,i){ return s + i.qty; }, 0);
+
+    badge.textContent = totalCount;
+    badge.classList.toggle('show', totalCount > 0);
+    countEl.textContent = totalCount > 0 ? '(' + totalCount + ' item' + (totalCount > 1 ? 's' : '') + ')' : '';
+
+    if(cart.length === 0){
+      el.innerHTML = '<div class="cart-empty"><i class="fas fa-shopping-bag"></i><p>Your cart is empty</p><a href="#products" class="btn btn-primary" onclick="closeCart()" style="font-size:12px;padding:12px 24px">Browse Products</a></div>';
+      footer.style.display = 'none';
+      return;
+    }
+    footer.style.display = 'block';
+    el.innerHTML = cart.map(function(item){
+      return '<div class="cart-item">' +
+        '<img class="cart-item__img" src="'+item.img+'" alt="'+item.name+'" />' +
+        '<div class="cart-item__body">' +
+          '<div class="cart-item__name">'+item.name+'</div>' +
+          '<div class="cart-item__type">'+item.type+'</div>' +
+          '<div><span class="cart-item__price">'+fmt(item.price)+'</span><span class="cart-item__compare">'+fmt(item.mrp)+'</span></div>' +
+          '<div class="cart-item__controls">' +
+            '<button class="qty-btn" onclick="changeQty(\''+item.id+'\', -1)">&#8722;</button>' +
+            '<div class="qty-display">'+item.qty+'</div>' +
+            '<button class="qty-btn" onclick="changeQty(\''+item.id+'\', 1)">+</button>' +
+            '<button class="cart-item__remove" onclick="removeFromCart(\''+item.id+'\')" title="Remove"><i class="fas fa-trash-alt"></i></button>' +
+          '</div>' +
+        '</div></div>';
+    }).join('');
+    var t = getCartTotal();
+    document.getElementById('cartSubtotal').textContent = fmt(t.subtotal);
+    document.getElementById('cartDelivery').innerHTML = t.delivery === 0 ? '<span class="free-tag">FREE</span>' : fmt(t.delivery);
+    document.getElementById('cartTotal').textContent = fmt(t.total);
+  }
+
+  // ============================================================
+  //  CART OPEN / CLOSE
+  // ============================================================
+  function openCart(){
+    document.getElementById('cartSidebar').classList.add('open');
+    document.getElementById('cartBackdrop').classList.add('show');
+    document.body.classList.add('no-scroll');
+  }
+  function closeCart(){
+    document.getElementById('cartSidebar').classList.remove('open');
+    document.getElementById('cartBackdrop').classList.remove('show');
+    document.body.classList.remove('no-scroll');
+  }
+  document.getElementById('cartBtn').addEventListener('click', openCart);
+  document.getElementById('cartCloseBtn').addEventListener('click', closeCart);
+  document.getElementById('cartBackdrop').addEventListener('click', closeCart);
+
+  // ============================================================
+  //  CHECKOUT
+  // ============================================================
+  var currentStep = 1;
+  var selectedPayment = 'cod';
+
+  function openCheckout(){
+    closeCart();
+    currentStep = 1;
+    renderCheckoutStep(1);
+    document.getElementById('checkoutModal').classList.add('open');
+    document.body.classList.add('no-scroll');
+  }
+  function closeCheckout(){
+    document.getElementById('checkoutModal').classList.remove('open');
+    document.body.classList.remove('no-scroll');
+  }
+  document.getElementById('checkoutBackdrop').addEventListener('click', closeCheckout);
+
+  function renderCheckoutStep(step){
+    [1,2,3,4].forEach(function(s){
+      var el = document.getElementById('chkStep'+s);
+      if(el) el.classList.toggle('active', s === step);
+    });
+    // Steps indicator
+    [1,2,3].forEach(function(s){
+      var dot = document.getElementById('step'+s+'dot');
+      if(!dot) return;
+      dot.classList.remove('active','done');
+      if(s < step) dot.classList.add('done');
+      else if(s === step) dot.classList.add('active');
+    });
+    var stepsBar = document.getElementById('checkoutSteps');
+    stepsBar.style.display = step === 4 ? 'none' : 'flex';
+    // Update title
+    var titles = { 1:'Secure Checkout', 2:'Delivery Address', 3:'Review &amp; Pay', 4:'Order Confirmed!' };
+    document.getElementById('checkoutTitle').innerHTML = titles[step] || 'Checkout';
+    // Render order summary on step 3
+    if(step === 3) renderCheckoutSummary();
+  }
+
+  function renderCheckoutSummary(){
+    var t = getCartTotal();
+    document.getElementById('chkOrderItems').innerHTML = cart.map(function(item){
+      return '<div class="chk-order-item">' +
+        '<img src="'+item.img+'" alt="'+item.name+'" />' +
+        '<div>' +
+          '<div class="chk-order-item__name">'+item.name+'</div>' +
+          '<div class="chk-order-item__meta">'+item.type+' &times; '+item.qty+'</div>' +
+        '</div>' +
+        '<div class="chk-order-item__price">'+fmt(item.price * item.qty)+'</div>' +
+      '</div>';
+    }).join('');
+    document.getElementById('chkTotals').innerHTML =
+      '<div class="chk-total-row"><span>Subtotal</span><span>'+fmt(t.subtotal)+'</span></div>' +
+      '<div class="chk-total-row"><span>Delivery</span><span>'+(t.delivery===0?'<b style="color:#108043">FREE</b>':fmt(t.delivery))+'</span></div>' +
+      '<div class="chk-total-row grand"><span>Grand Total</span><span>'+fmt(t.total)+'</span></div>';
+    // update place order button text
+    var btn = document.getElementById('placeOrderBtn');
+    btn.innerHTML = selectedPayment === 'cod'
+      ? '<i class="fas fa-check" style="font-size:11px"></i> Confirm COD Order'
+      : '<i class="fas fa-lock" style="font-size:11px"></i> Pay '+fmt(t.total)+' Securely';
+  }
+
+  function selectPayment(method){
+    selectedPayment = method;
+    document.getElementById('payOptCOD').classList.toggle('selected', method === 'cod');
+    document.getElementById('payOptOnline').classList.toggle('selected', method === 'online');
+    renderCheckoutSummary();
+  }
+
+  // ============================================================
+  //  VALIDATION
+  // ============================================================
+  function showErr(id, msg, show){
+    var el = document.getElementById(id+'Err');
+    var inp = document.getElementById(id);
+    if(el){ el.textContent = msg||el.textContent; el.classList.toggle('show', show); }
+    if(inp){ inp.classList.toggle('error', show); }
+    return !show;
+  }
+
+  function validateStep1(){
+    var name = document.getElementById('chkName').value.trim();
+    var phone = document.getElementById('chkPhone').value.trim().replace(/\s/g,'');
+    var ok = true;
+    ok = showErr('chkName','Please enter your full name.', name.length < 2) && ok;
+    ok = showErr('chkPhone','Please enter a valid 10-digit phone number.', !/^[6-9]\d{9}$/.test(phone)) && ok;
+    return ok;
+  }
+
+  function validateStep2(){
+    var ok = true;
+    ok = showErr('chkAddr1','Please enter your address.', !document.getElementById('chkAddr1').value.trim()) && ok;
+    ok = showErr('chkAddr2','Please enter your street/area.', !document.getElementById('chkAddr2').value.trim()) && ok;
+    ok = showErr('chkCity','Required.', !document.getElementById('chkCity').value.trim()) && ok;
+    ok = showErr('chkPin','Enter valid 6-digit pincode.', !/^\d{6}$/.test(document.getElementById('chkPin').value.trim())) && ok;
+    ok = showErr('chkState','Please select your state.', !document.getElementById('chkState').value) && ok;
+    return ok;
+  }
+
+  function goStep(step){
+    if(step === 2 && !validateStep1()) return;
+    if(step === 3 && !validateStep2()) return;
+    currentStep = step;
+    renderCheckoutStep(step);
+  }
+
+  // ============================================================
+  //  PLACE ORDER
+  // ============================================================
+  function buildOrderText(paymentInfo){
+    var name = document.getElementById('chkName').value.trim();
+    var phone = document.getElementById('chkPhone').value.trim();
+    var email = document.getElementById('chkEmail').value.trim();
+    var addr = [
+      document.getElementById('chkAddr1').value.trim(),
+      document.getElementById('chkAddr2').value.trim(),
+      document.getElementById('chkCity').value.trim()+' - '+document.getElementById('chkPin').value.trim(),
+      document.getElementById('chkState').value,
+      'India'
+    ].filter(Boolean).join(', ');
+    var notes = document.getElementById('chkNotes').value.trim();
+    var t = getCartTotal();
+    var items = cart.map(function(i){ return i.name+' x'+i.qty+' = '+fmt(i.price*i.qty); }).join('\n');
+    var txt = '*New Order - Yashel Fragrance*\n\n';
+    txt += '*Customer:* '+name+'\n';
+    txt += '*Phone:* '+phone+'\n';
+    if(email) txt += '*Email:* '+email+'\n';
+    txt += '\n*Delivery Address:*\n'+addr+'\n';
+    if(notes) txt += '\n*Notes:* '+notes+'\n';
+    txt += '\n*Order Items:*\n'+items+'\n';
+    txt += '\n*Subtotal:* '+fmt(t.subtotal)+'\n';
+    txt += '*Delivery:* '+(t.delivery===0?'FREE':fmt(t.delivery))+'\n';
+    txt += '*Grand Total:* '+fmt(t.total)+'\n';
+    txt += '\n*Payment:* '+paymentInfo;
+    return txt;
+  }
+
+  function generateOrderId(){
+    return 'YF-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).substr(2,4).toUpperCase();
+  }
+
+  function placeOrder(){
+    if(selectedPayment === 'cod'){
+      placeCODOrder();
+    } else {
+      placeRazorpayOrder();
+    }
+  }
+
+  function placeCODOrder(){
+    var orderId = generateOrderId();
+    var txt = buildOrderText('Cash on Delivery (COD)\nOrder ID: '+orderId);
+    // Send to WhatsApp
+    window.open('https://wa.me/919560291377?text='+encodeURIComponent(txt), '_blank');
+    // Clear cart and show success
+    cart = [];
+    saveCart();
+    renderCart();
+    showSuccess(orderId, 'cod');
+  }
+
+  function placeRazorpayOrder(){
+    var t = getCartTotal();
+    var name = document.getElementById('chkName').value.trim();
+    var phone = document.getElementById('chkPhone').value.trim().replace(/\s/g,'');
+    var email = document.getElementById('chkEmail').value.trim() || 'customer@yashel.com';
+
+    // ⚠️ REPLACE WITH YOUR RAZORPAY KEY ID FROM razorpay.com/dashboard
+    var RAZORPAY_KEY = 'rzp_test_YourKeyHere';
+
+    var options = {
+      key: RAZORPAY_KEY,
+      amount: t.total * 100, // paise
+      currency: 'INR',
+      name: 'Yashel Fragrance',
+      description: cart.map(function(i){ return i.name+' x'+i.qty; }).join(', '),
+      image: 'https://www.yashelfragrance.com/assets/yashel%20logo-removebg-preview.png',
+      prefill: { name: name, contact: phone, email: email },
+      theme: { color: '#c7a282' },
+      modal: { backdropclose: false },
+      handler: function(response){
+        var orderId = response.razorpay_payment_id || generateOrderId();
+        var txt = buildOrderText('PAID ONLINE via Razorpay\nPayment ID: '+response.razorpay_payment_id);
+        window.open('https://wa.me/919560291377?text='+encodeURIComponent(txt), '_blank');
+        cart = [];
+        saveCart();
+        renderCart();
+        showSuccess(orderId, 'online');
+      }
+    };
+    var rzp = new Razorpay(options);
+    rzp.on('payment.failed', function(resp){
+      alert('Payment failed: '+resp.error.description+'\nPlease try again or choose Cash on Delivery.');
+    });
+    rzp.open();
+  }
+
+  function showSuccess(orderId, method){
+    renderCheckoutStep(4);
+    var msg = method === 'cod'
+      ? 'Your order has been placed successfully! We have opened WhatsApp with your order details. Our team will confirm your order and provide delivery updates shortly.'
+      : 'Payment received! We have opened WhatsApp with your order confirmation. Our team will arrange dispatch shortly.';
+    document.getElementById('successMsg').textContent = msg;
+    document.getElementById('successOrderId').textContent = 'Order ID: '+orderId;
+  }
+
+  // ============================================================
+  //  MOBILE DRAWER
+  // ============================================================
+  var burgerBtn=document.getElementById('burgerBtn'),mobileDrawer=document.getElementById('mobileDrawer'),drawerOverlay=document.getElementById('drawerOverlay'),drawerClose=document.getElementById('drawerClose');
+  function openDrawer(){ mobileDrawer.classList.add('open'); document.body.classList.add('no-scroll'); }
+  function closeDrawer(){ mobileDrawer.classList.remove('open'); document.body.classList.remove('no-scroll'); }
+  burgerBtn.addEventListener('click',openDrawer);
+  drawerOverlay.addEventListener('click',closeDrawer);
+  drawerClose.addEventListener('click',closeDrawer);
+
+  // ============================================================
+  //  PRODUCT FILTER
+  // ============================================================
+  function filterProducts(tab,btn){
+    document.querySelectorAll('.filter-tab').forEach(function(t){ t.classList.remove('active'); });
+    btn.classList.add('active');
+    document.querySelectorAll('.product-card').forEach(function(card){
+      var cats = card.getAttribute('data-category') || '';
+      card.style.display = (tab==='all' || cats.indexOf(tab)>-1) ? '' : 'none';
+    });
+  }
+
+  // ============================================================
+  //  CONTACT FORM WHATSAPP
+  // ============================================================
+  function sendContactWhatsApp(){
+    var name=document.getElementById('fname').value.trim()||'Customer';
+    var phone=document.getElementById('fphone').value.trim();
+    var product=document.getElementById('fproduct').value||'Not specified';
+    var msg_=document.getElementById('fmsg').value.trim();
+    var text=encodeURIComponent('Hi Yashel! I have a query.\n\nName: '+name+'\nPhone: '+(phone||'N/A')+'\nProduct: '+product+(msg_?'\nMessage: '+msg_:''));
+    window.open('https://wa.me/919560291377?text='+text,'_blank');
+  }
+
+  // ============================================================
+  //  SCROLL REVEAL + HEADER
+  // ============================================================
+  var revealEls=document.querySelectorAll('[data-reveal]');
+  var revealObs=new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); revealObs.unobserve(e.target); } }); }, {threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+  revealEls.forEach(function(el){ revealObs.observe(el); });
+  var header=document.getElementById('siteHeader');
+  window.addEventListener('scroll',function(){ header.style.boxShadow=window.scrollY>20?'0 2px 20px rgba(0,0,0,0.1)':'none'; });
+
+  // Init cart on load
+  renderCart();
   </script>
 </body>
 </html>
